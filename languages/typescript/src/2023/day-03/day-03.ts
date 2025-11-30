@@ -1,21 +1,10 @@
-import { Ids } from '../../types/math/Ids.ts';
-import { Vec2 } from '../../types/math/Vec2.ts';
+import { Neighbours } from '../../types/grids/grids.ts';
 import { Puzzle } from '../../types/puzzle.ts';
 import { TileMap } from '../../utils/datatypes/tilemap.ts';
 import { sum } from '../../utils/maths.ts';
 import { Str } from '../../utils/strs.ts';
 
-const neighbours = [
-  // up-left, up, up-right, left, right, down-left, down, down-right
-  Vec2.new(-1, -1),
-  Vec2.new(-1, 0),
-  Vec2.new(-1, 1),
-  Vec2.new(0, -1),
-  Vec2.new(0, 1),
-  Vec2.new(1, -1),
-  Vec2.new(1, 0),
-  Vec2.new(1, 1),
-];
+const neighbours = Neighbours.all;
 
 const isDigitChar = (char: string | undefined): char is string => char !== undefined && char >= '0' && '9' >= char;
 
@@ -24,7 +13,7 @@ const readPartValue = (tilemap: TileMap<string>, visited: Set<number>, startAtX:
 
   const lefts = [];
   for (let y = startAtY - 1; y >= 0; --y) {
-    visited.add(Ids.xyi32(startAtX, y));
+    visited.add(tilemap.id(startAtX, y));
 
     const value = tilemap.at(startAtX, y);
     if (isDigitChar(value)) {
@@ -36,7 +25,7 @@ const readPartValue = (tilemap: TileMap<string>, visited: Set<number>, startAtX:
 
   const rights = [];
   for (let y = startAtY + 1; y < tilemap.m; ++y) {
-    visited.add(Ids.xyi32(startAtX, y));
+    visited.add(tilemap.id(startAtX, y));
 
     const value = tilemap.at(startAtX, y);
     if (isDigitChar(value)) {
@@ -55,61 +44,57 @@ export default Puzzle.new({
     const tilemap = TileMap.fromGrid(grid);
     const visits = new Set<number>();
 
-    const partValue = [];
-    for (let x = 0; x < tilemap.n; ++x) {
-      for (let y = 0; y < tilemap.m; ++y) {
-        const value = tilemap.at(x, y);
-        if (value === '.' || isDigitChar(value)) continue;
+    const partValues = [];
+    const positions = tilemap.filter((value) => value !== '.' && !isDigitChar(value));
+    for (const { x, y } of positions) {
+      for (const { x: dx, y: dy } of neighbours) {
+        const ox = x + dx;
+        const oy = y + dy;
+        if (!tilemap.is(ox, oy, isDigitChar)) continue;
 
-        for (const { x: dx, y: dy } of neighbours) {
-          const ox = x + dx;
-          const oy = y + dy;
-          if (!tilemap.inBounds(ox, oy)) continue;
+        const id = tilemap.id(ox, oy);
+        if (visits.has(id)) continue;
+        visits.add(id);
 
-          const ov = tilemap.at(ox, oy);
-          if (!isDigitChar(ov)) continue;
-
-          const id = Ids.xyi32(ox, oy);
-          if (visits.has(id)) continue;
-          visits.add(id);
-
-          partValue.push(readPartValue(tilemap, visits, ox, oy));
-        }
+        partValues.push(readPartValue(tilemap, visits, ox, oy));
       }
     }
 
-    return sum(partValue);
+    return sum(partValues);
   },
   hard(grid) {
     const tilemap = TileMap.fromGrid(grid);
     const visits = new Set<number>();
 
-    const gearValue = [];
-    for (let x = 0; x < tilemap.n; ++x) {
-      for (let y = 0; y < tilemap.m; ++y) {
-        if (!tilemap.is(x, y, '*')) continue;
+    const positions = tilemap.filter('*');
 
-        const partValues = [];
-        for (const { x: dx, y: dy } of neighbours) {
-          const ox = x + dx;
-          const oy = y + dy;
-          if (!tilemap.inBounds(ox, oy)) continue;
+    const gearValues = [];
+    positions_iterator: for (const { x, y } of positions) {
+      let first: undefined | number;
+      let second: undefined | number;
+      for (const { x: dx, y: dy } of neighbours) {
+        const ox = x + dx;
+        const oy = y + dy;
+        if (!tilemap.is(ox, oy, isDigitChar)) continue;
 
-          const ov = tilemap.at(ox, oy);
-          if (!isDigitChar(ov)) continue;
+        const id = tilemap.id(ox, oy);
+        if (visits.has(id)) continue;
+        visits.add(id);
 
-          const id = Ids.xyi32(ox, oy);
-          if (visits.has(id)) continue;
-          visits.add(id);
-
-          partValues.push(readPartValue(tilemap, visits, ox, oy));
+        const value = readPartValue(tilemap, visits, ox, oy);
+        if (first === undefined) {
+          first = value;
+        } else if (second === undefined) {
+          second = value;
+        } else {
+          continue positions_iterator;
         }
-
-        if (partValues.length !== 2) continue;
-        gearValue.push(partValues[0] * partValues[1]);
       }
+
+      if (first === undefined || second === undefined) continue;
+      gearValues.push(first * second);
     }
 
-    return sum(gearValue);
+    return sum(gearValues);
   },
 });

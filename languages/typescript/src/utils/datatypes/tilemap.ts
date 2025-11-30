@@ -1,3 +1,4 @@
+import { Ids } from '../../types/math/Ids.ts';
 import { Vec2 } from '../../types/math/Vec2.ts';
 
 export class TileMap<T extends string> {
@@ -30,12 +31,18 @@ export class TileMap<T extends string> {
     return x >= 0 && x < this.n && y >= 0 && y < this.m;
   }
 
-  is(x: number, y: number, tile: T): boolean {
-    return this.at(x, y) === tile;
+  id(x: number, y: number): number {
+    return Ids.xyi32(x, y);
+  }
+
+  is(x: number, y: number, predicate: ((tile: T) => boolean) | T): boolean {
+    const tile = this.at(x, y);
+    if (tile === undefined) return false;
+    return typeof predicate === 'function' ? predicate(tile) : tile === predicate;
   }
 
   at(x: number, y: number): T | undefined {
-    return this.grid[x][y];
+    return this.inBounds(x, y) ? this.grid[x][y] : undefined;
   }
 
   set(x: number, y: number, tile: T): void {
