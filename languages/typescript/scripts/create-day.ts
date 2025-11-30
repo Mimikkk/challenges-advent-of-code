@@ -1,9 +1,9 @@
 import { colors } from '@cliffy/ansi/colors';
 import { Command } from '@cliffy/command';
 import { Number } from '@cliffy/prompt';
-import { Result } from '@mimi/aoc';
 import { ensureDir, exists } from '@std/fs';
 import { resolve } from '@std/path';
+import { Result } from '../src/types/result.ts';
 const formatDay = (day: number) => day.toString().padStart(2, '0');
 
 namespace Validation {
@@ -204,7 +204,7 @@ await new Command()
   .description('Create a puzzle for the given year and day.')
   .option('-y, --year <year:number>', 'The year of the puzzle to create. Must be between 2000 and 2050.')
   .option('-d, --day <day:number>', 'The day of the puzzle to create. Must be between 1 and 25.')
-  .action(async ({ year, day }) => {
+  .action(async ({ year, day }: { year: number; day: number }) => {
     if (!year) year = await Prompt.year();
     if (!day) day = await Prompt.day();
     const validation = Validation.validate(year, day, Network.session());
