@@ -19,3 +19,12 @@ export const countBy = <T>(items: T[], fn: (item: T, index: number) => unknown):
 };
 
 export const count = (items: number[]): number => countBy(items, identity);
+
+export const minBy = <T>(items: T[], fn: (item: T, index: number) => number): number => {
+  let min = Infinity;
+  for (let i = 0; i < items.length; ++i) {
+    const value = fn(items[i], i);
+    if (value < min) min = value;
+  }
+  return min;
+};

@@ -1,66 +1,79 @@
 import { Puzzle } from '../../types/puzzle.ts';
+import { minBy } from '../../utils/maths.ts';
+import { Str } from '../../utils/strs.ts';
 
-type Range = { offset: number; start: number; size: number };
+type SeedMap = [destination: number, source: number, size: number];
+type Range = [start: number, size: number];
 
-const mapRange = (source: number, range: Range): number => {
-  if (source >= range.start && source < range.start + range.size) {
-    return range.offset + (source - range.start);
-  }
-  return source;
-};
-
-const mapRanges = (
-  source: number,
-  ranges: Range[],
-): number => {
-  for (const range of ranges) {
-    if (source >= range.start && source < range.start + range.size) {
-      return range.offset + (source - range.start);
-    }
+const applyMap = (value: number, map: SeedMap[]): number => {
+  for (const [destination, source, range] of map) {
+    if (value < source || value >= source + range) continue;
+    return destination + (value - source);
   }
 
-  return source;
+  return value;
 };
 
-type Category = 'seed' | 'soil' | 'fertilizer' | 'water' | 'light' | 'temperature' | 'humidity' | 'location';
-const order: Category[] = ['soil', 'fertilizer', 'water', 'light', 'temperature', 'humidity', 'location'];
-const parseMaps = (input: string) => {
-  const [[seedsStr], ...mapsStrs] = input.split('\n\n').map((s) => s.trim().split('\n'));
+const applyMaps = (value: number, maps: SeedMap[][]): number => {
+  for (const map of maps) {
+    value = applyMap(value, map);
+  }
 
-  const matchDirections = (str: string) => str.match(/(\w+)-to-(\w+)/)!.slice(1);
-  const extractNumbers = (str: string) => str.matchAll(/\d+/g).map((match) => +match[0]).toArray();
-  const seeds = extractNumbers(seedsStr);
-
-  const maps = new Map<Category, (source: number) => number>(mapsStrs.map(([name, ...records]) => {
-    const [_, to] = matchDirections(name);
-
-    const ranges = records.map(extractNumbers).map(([offset, start, size]) => ({ offset, start, size }));
-
-    return [
-      to,
-      (source) => mapRanges(source, ranges),
-    ] as [Category, (source: number) => number];
-  }));
-
-  return { seeds, maps };
+  return value;
 };
 
 export default Puzzle.new({
-  prepare: (input) => parseMaps(input),
-  easy: ({ seeds, maps }) => {
-    let min = Infinity;
+  prepare(input) {
+    const [seedsStr, ...mapsStrs] = Str.lines(input);
 
-    for (let seed of seeds) {
-      for (const category of order) {
-        seed = maps.get(category)!(seed);
-      }
+    const seeds = seedsStr
+      .split(' ')
+      .map((s) => +s)
+      .slice(1);
 
-      if (seed < min) {
-        min = seed;
+    const maps: SeedMap[][] = Array(7);
+    for (let i = 0; i < 7; ++i) maps[i] = [];
+
+    for (let i = 2, j = 0, it = mapsStrs.length; i < it; i += 2, ++j) {
+      while (mapsStrs[i] !== '' && i < it) {
+        maps[j].push(mapsStrs[i++].split(' ').map((s) => +s) as SeedMap);
       }
     }
 
-    return min;
+    return { seeds, maps };
   },
-  hard: () => 0,
+  easy({ seeds, maps }) {
+    return minBy(seeds, (value) => applyMaps(value, maps));
+  },
+  hard({ seeds, maps }) {
+    let ranges: Range[] = Array(seeds.length / 2);
+    for (let i = 0; i < seeds.length; i += 2) {
+      ranges[i / 2] = [seeds[i], seeds[i + 1]];
+    }
+
+    for (const map of maps) {
+      const next: Range[] = [];
+
+      ranges_iterator: for (const [start, size] of ranges) {
+        for (const [destination, source, range] of map) {
+          if (!(start < source + range && source < start + size)) continue;
+          const max = Math.max(start, source);
+          const min = Math.min(start + size, source + range) - max;
+
+          next.push([max - source + destination, min]);
+          if (max > start || max + min < start + size) {
+            ranges.push([start, max - start], [max + min, start + size - max - min]);
+          }
+
+          continue ranges_iterator;
+        }
+
+        next.push([start, size]);
+      }
+
+      ranges = next;
+    }
+
+    return Math.min(...ranges.map(([s]) => s));
+  },
 });
