@@ -1,9 +1,9 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 const codeOf = (code: string) => code.charCodeAt(0);
-const isUppercase = (code: string) => code >= "A" && code <= "Z";
-const isLowercase = (code: string) => code >= "a" && code <= "z";
+const isUppercase = (code: string) => code >= 'A' && code <= 'Z';
+const isLowercase = (code: string) => code >= 'a' && code <= 'z';
 
 export const priorityOf = (item: string): number => {
   if (isUppercase(item)) return codeOf(item) - 38;

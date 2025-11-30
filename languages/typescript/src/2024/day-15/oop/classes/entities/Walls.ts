@@ -1,6 +1,6 @@
-import type { Const } from "../../../../../types/const.ts";
-import type { Vec2 } from "../../../../../types/math/Vec2.ts";
-import { SetColider } from "../coliders/SetColider.ts";
+import type { Const } from '../../../../../types/const.ts';
+import type { Vec2 } from '../../../../../types/math/Vec2.ts';
+import { SetColider } from '../coliders/SetColider.ts';
 
 export class Walls {
   static new(positions: Vec2[] = [], colider = SetColider.new()): self {

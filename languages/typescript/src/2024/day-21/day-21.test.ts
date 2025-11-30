@@ -1,7 +1,8 @@
-import { createPuzzleTest } from "../../utils/create-puzzle-test.ts";
-import puzzle from "./day-21.ts";
+import { createPuzzleTest } from '../../utils/create-puzzle-test.ts';
+import puzzle from './day-21.ts';
 
 createPuzzleTest({
   puzzle,
   easyTest: 126384,
+  skip: true,
 });

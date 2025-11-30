@@ -1,8 +1,8 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
-const parseGrid = (content: string): string[][] => Str.lines(content).map((line) => line.split(""));
+const parseGrid = (content: string): string[][] => Str.lines(content).map((line) => line.split(''));
 
 const orthogonals = [
   // up

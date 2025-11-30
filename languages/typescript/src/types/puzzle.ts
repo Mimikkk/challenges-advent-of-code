@@ -24,20 +24,20 @@ export class Puzzle<T, R1, R2, I1 = T, I2 = T> {
 
   async easy(content: string): Promise<R1> {
     const { configuration: { prepare, easy } } = this;
-    if (!easy) throw Error("Easy task is not defined");
+    if (!easy) throw Error('Easy task is not defined');
 
     const prepared = prepare(content);
-    if (typeof easy === "function") return await easy(prepared);
+    if (typeof easy === 'function') return await easy(prepared);
 
     return easy.task((easy.prepare?.(prepared) ?? prepared) as I1);
   }
 
   async hard(content: string): Promise<R2> {
     const { configuration: { prepare, hard } } = this;
-    if (!hard) throw Error("Hard task is not defined");
+    if (!hard) throw Error('Hard task is not defined');
 
     const prepared = prepare(content);
-    if (typeof hard === "function") return await hard(prepared);
+    if (typeof hard === 'function') return await hard(prepared);
     return hard.task((hard.prepare?.(prepared) ?? prepared) as I2);
   }
 

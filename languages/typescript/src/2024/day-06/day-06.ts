@@ -1,20 +1,20 @@
-import type { Const } from "../../types/const.ts";
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import type { Const } from '../../types/const.ts';
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 export enum Tile {
-  GuardStart = "^",
-  Obstacle = "#",
-  Empty = ".",
+  GuardStart = '^',
+  Obstacle = '#',
+  Empty = '.',
 }
 
 export enum Direction {
-  Up = "up",
-  Down = "down",
-  Left = "left",
-  Right = "right",
+  Up = 'up',
+  Down = 'down',
+  Left = 'left',
+  Right = 'right',
 }
 
 export namespace Direction {
@@ -151,7 +151,7 @@ export namespace Movement {
   };
 }
 
-const parseBoard = (content: string): Board => Board.new(Str.lines(content).map((line) => line.split("")) as Tile[][]);
+const parseBoard = (content: string): Board => Board.new(Str.lines(content).map((line) => line.split('')) as Tile[][]);
 
 const countStepsTillOutOfBounds = (board: Board): number => {
   const guard = board.findGuard();

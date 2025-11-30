@@ -1,5 +1,5 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 interface Pages {
   rules: Map<number, Set<number>>;
@@ -20,7 +20,7 @@ const preparePages = (content: string): Pages => {
 
   const rules = new Map();
   for (let i = 0; i < rulesLines.length; ++i) {
-    const [after, before] = rulesLines[i].split("|").map(Number) as [number, number];
+    const [after, before] = rulesLines[i].split('|').map(Number) as [number, number];
 
     let list = rules.get(before);
     if (list === undefined) {
@@ -31,7 +31,7 @@ const preparePages = (content: string): Pages => {
     list.add(after);
   }
 
-  const lists = listsLines.map((line) => line.split(",").map(Number));
+  const lists = listsLines.map((line) => line.split(',').map(Number));
 
   return { rules, lists };
 };

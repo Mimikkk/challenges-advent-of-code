@@ -1,7 +1,7 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 type PositionsMap = Map<string, Vec2[]>;
 class Board {
@@ -38,7 +38,7 @@ class Board {
     for (let i = 0; i < n; ++i) {
       for (let j = 0; j < m; ++j) {
         const node = grid[i][j];
-        if (node === ".") continue;
+        if (node === '.') continue;
 
         let positions = map.get(node);
         if (positions === undefined) {

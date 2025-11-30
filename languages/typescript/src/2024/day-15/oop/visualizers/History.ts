@@ -1,5 +1,5 @@
-import type { Const } from "../../../../types/const.ts";
-import type { Cloneable } from "../classes/Cloneable.ts";
+import type { Const } from '../../../../types/const.ts';
+import type { Cloneable } from '../classes/Cloneable.ts';
 
 export class History<T extends Cloneable<T>> {
   static new<T extends Cloneable<T>>(memory: T[] = [], size: number = 0): self<T> {

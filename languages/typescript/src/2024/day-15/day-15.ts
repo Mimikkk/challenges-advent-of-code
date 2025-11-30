@@ -1,19 +1,19 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Tile {
-  Wall = "#",
-  Obstacle = "O",
-  Player = "@",
+  Wall = '#',
+  Obstacle = 'O',
+  Player = '@',
 }
 
 enum Direction {
-  Up = "^",
-  Down = "v",
-  Left = "<",
-  Right = ">",
+  Up = '^',
+  Down = 'v',
+  Left = '<',
+  Right = '>',
 }
 
 namespace Direction {
@@ -43,10 +43,10 @@ export const parseInput = (content: string): InputResult => {
   let i = 0;
 
   const board: Tile[][] = [];
-  while (line = lines[i++]) board.push(line.split("") as Tile[]);
+  while (line = lines[i++]) board.push(line.split('') as Tile[]);
 
   const moves: Direction[] = [];
-  while (line = lines[i++]) moves.push(...line.split("") as Direction[]);
+  while (line = lines[i++]) moves.push(...line.split('') as Direction[]);
 
   return { board, moves };
 };

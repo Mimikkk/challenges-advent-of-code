@@ -1,11 +1,11 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Tile {
-  Safe = ".",
-  Corrupted = "#",
+  Safe = '.',
+  Corrupted = '#',
 }
 
 interface PuzzleInput {
@@ -18,7 +18,7 @@ interface PuzzleInput {
 }
 
 const parseInput = (content: string): PuzzleInput => {
-  const corruptions = Str.lines(content).map((line) => line.split(",").map(Number)) as [
+  const corruptions = Str.lines(content).map((line) => line.split(',').map(Number)) as [
     number,
     number,
   ][];
@@ -96,7 +96,7 @@ const findFirstBlockage = (input: PuzzleInput): string | undefined => {
     const [x, y] = corruptions[i];
     input.memory[y][x] = Tile.Corrupted;
 
-    if (countSteps(input) === Infinity) return [x, y].join(",");
+    if (countSteps(input) === Infinity) return [x, y].join(',');
   }
 
   return;

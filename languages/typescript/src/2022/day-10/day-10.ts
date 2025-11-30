@@ -1,14 +1,14 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
-type Noop = "noop";
+type Noop = 'noop';
 type Addx = number;
 type Instruction = Noop | Addx;
 
-const isNoop = (instruction: Instruction): instruction is Noop => instruction === "noop";
+const isNoop = (instruction: Instruction): instruction is Noop => instruction === 'noop';
 
 const parseInstructions = (content: string): Instruction[] =>
-  Str.lines(content).map((r) => r.split(" ")).map(([type, value]) => type === "noop" ? "noop" : +value);
+  Str.lines(content).map((r) => r.split(' ')).map(([type, value]) => type === 'noop' ? 'noop' : +value);
 
 const sumSignalStrength = (instructions: Instruction[]): number => {
   let registry = 1;
@@ -49,7 +49,7 @@ const readCrtMessage = (instructions: Instruction[]): string => {
   const lines: string[] = [];
 
   let cycle = 0;
-  let line = Array(width).fill(".");
+  let line = Array(width).fill('.');
   const incrementCycle = (n?: number) => {
     if (n !== undefined) {
       while (n--) incrementCycle();
@@ -62,11 +62,11 @@ const readCrtMessage = (instructions: Instruction[]): string => {
       needlePosition === spritePosition ||
       needlePosition === spritePosition + 1;
 
-    if (isVisible) line[needlePosition] = "#";
+    if (isVisible) line[needlePosition] = '#';
 
     if (needlePosition === width - 1) {
-      lines.push(line.join(""));
-      line = Array(width).fill(".");
+      lines.push(line.join(''));
+      line = Array(width).fill('.');
     }
 
     cycle += 1;
@@ -83,7 +83,7 @@ const readCrtMessage = (instructions: Instruction[]): string => {
     }
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 };
 
 export default Puzzle.new({

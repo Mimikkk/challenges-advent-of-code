@@ -1,5 +1,5 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 type InspectFn = (value: number) => number;
 type OperatorFn = (a: number, b: number) => number;
@@ -33,14 +33,14 @@ namespace Parser {
   const parseItems = (itemsLine: string): number[] => {
     const [itemsStr] = re.items.exec(itemsLine)!;
 
-    return itemsStr.split(", ").map(Number);
+    return itemsStr.split(', ').map(Number);
   };
 
   const add: OperatorFn = (a, b) => a + b;
   const mul: OperatorFn = (a, b) => a * b;
   const identity: OperandFn = (value) => value;
   const parseOperand = (operandStr: string): OperandFn => {
-    if (operandStr === "old") return identity;
+    if (operandStr === 'old') return identity;
 
     const b = +operandStr;
     return () => b;
@@ -48,11 +48,11 @@ namespace Parser {
 
   const parseOperationFn = (operationLine: string): InspectFn => {
     const [, operationStr] = re.operation.exec(operationLine)!;
-    const [operandA, operator, operandB] = operationStr.split(" ");
+    const [operandA, operator, operandB] = operationStr.split(' ');
 
     const getA = parseOperand(operandA);
     const getB = parseOperand(operandB);
-    const operation = operator === "*" ? mul : add;
+    const operation = operator === '*' ? mul : add;
 
     return (value) => operation(getA(value), getB(value));
   };

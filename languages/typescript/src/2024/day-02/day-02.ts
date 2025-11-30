@@ -1,7 +1,7 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
-const parseLists = (content: string): number[][] => Str.lines(content).map((line) => line.split(" ").map(Number));
+const parseLists = (content: string): number[][] => Str.lines(content).map((line) => line.split(' ').map(Number));
 
 const isSafe = (values: number[]) => {
   if (values[0] > values[1]) {

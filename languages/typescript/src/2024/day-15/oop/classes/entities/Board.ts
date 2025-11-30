@@ -1,11 +1,11 @@
-import type { Const } from "../../../../../types/const.ts";
-import type { Vec2 } from "../../../../../types/math/Vec2.ts";
+import type { Const } from '../../../../../types/const.ts';
+import type { Vec2 } from '../../../../../types/math/Vec2.ts';
 
 export enum Tile {
-  Player = "@",
-  Obstacle = "O",
-  Wall = "#",
-  Empty = ".",
+  Player = '@',
+  Obstacle = 'O',
+  Wall = '#',
+  Empty = '.',
 }
 
 export class Board {

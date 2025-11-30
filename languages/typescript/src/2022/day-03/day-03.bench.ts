@@ -1,6 +1,6 @@
-import { Puzzle, Str } from "../../mod.ts";
-import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
-import puzzle, { priorityOf } from "./day-03.ts";
+import { Puzzle, Str } from '../../mod.ts';
+import { createPuzzleBench } from '../../utils/create-puzzle-bench.ts';
+import puzzle, { priorityOf } from './day-03.ts';
 
 const boomerloop = Puzzle.new({
   prepare: Str.lines,

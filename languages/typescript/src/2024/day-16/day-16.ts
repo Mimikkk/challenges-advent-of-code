@@ -1,13 +1,13 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Tile {
-  Start = "S",
-  End = "E",
-  Empty = ".",
-  Wall = "#",
+  Start = 'S',
+  End = 'E',
+  Empty = '.',
+  Wall = '#',
 }
 
 const findStart = (maze: Tile[][]): Vec2 => {
@@ -18,7 +18,7 @@ const findStart = (maze: Tile[][]): Vec2 => {
     }
   }
 
-  throw new Error("Start not found");
+  throw new Error('Start not found');
 };
 
 const findEnd = (maze: Tile[][]): Vec2 => {
@@ -29,16 +29,16 @@ const findEnd = (maze: Tile[][]): Vec2 => {
     }
   }
 
-  throw new Error("End not found");
+  throw new Error('End not found');
 };
 
-const parseInput = (content: string): Tile[][] => Str.lines(content).map((line) => line.split("")) as Tile[][];
+const parseInput = (content: string): Tile[][] => Str.lines(content).map((line) => line.split('')) as Tile[][];
 
 enum Direction {
-  east = "east",
-  west = "west",
-  north = "north",
-  south = "south",
+  east = 'east',
+  west = 'west',
+  north = 'north',
+  south = 'south',
 }
 
 namespace Direction {
@@ -55,7 +55,7 @@ namespace Direction {
     if (direction === vecs.west) return Direction.west;
     if (direction === vecs.north) return Direction.north;
     if (direction === vecs.south) return Direction.south;
-    throw new Error("Invalid direction");
+    throw new Error('Invalid direction');
   };
 
   export const countTurns = (from: Vec2, to: Vec2): number => {

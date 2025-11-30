@@ -1,8 +1,8 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
-import { Ids } from "../../types/math/Ids.ts";
-import { memoize } from "../../utils/memoize.ts";
-import { sumBy } from "../../utils/maths.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
+import { Ids } from '../../types/math/Ids.ts';
+import { memoize } from '../../utils/memoize.ts';
+import { sumBy } from '../../utils/maths.ts';
 
 interface PuzzleInput {
   patterns: string[];
@@ -13,7 +13,7 @@ const parseInput = (content: string): PuzzleInput => {
   const lines = Str.lines(content);
 
   let i = 0;
-  const patterns = lines[i++].split(", ");
+  const patterns = lines[i++].split(', ');
 
   const designs: string[] = [];
   while (lines[++i]) designs.push(lines[i]);

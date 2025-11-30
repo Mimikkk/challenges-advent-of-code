@@ -1,14 +1,14 @@
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
-import { Board, Tile } from "./oop/classes/entities/Board.ts";
-import { Obstacle } from "./oop/classes/entities/Obstacle.ts";
-import { Player } from "./oop/classes/entities/Player.ts";
-import { Walls } from "./oop/classes/entities/Walls.ts";
-import { PuzzleInput } from "./oop/classes/PuzzleInput.ts";
-import type { Direction } from "./oop/enums/direction.enum.ts";
-import { Movement } from "./oop/logic/movement.ts";
-import { Scores } from "./oop/logic/scores.ts";
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
+import { Board, Tile } from './oop/classes/entities/Board.ts';
+import { Obstacle } from './oop/classes/entities/Obstacle.ts';
+import { Player } from './oop/classes/entities/Player.ts';
+import { Walls } from './oop/classes/entities/Walls.ts';
+import { PuzzleInput } from './oop/classes/PuzzleInput.ts';
+import type { Direction } from './oop/enums/direction.enum.ts';
+import { Movement } from './oop/logic/movement.ts';
+import { Scores } from './oop/logic/scores.ts';
 
 interface InputResult {
   board: Board;
@@ -21,11 +21,11 @@ const parseInput = (content: string): InputResult => {
   let i = 0;
 
   const grid: Tile[][] = [];
-  while (line = lines[i++]) grid.push(line.split("") as Tile[]);
+  while (line = lines[i++]) grid.push(line.split('') as Tile[]);
   const board = Board.fromGrid(grid);
 
   const moves: Direction[] = [];
-  while (line = lines[i++]) moves.push(...line.split("") as Direction[]);
+  while (line = lines[i++]) moves.push(...line.split('') as Direction[]);
 
   return { board, moves };
 };

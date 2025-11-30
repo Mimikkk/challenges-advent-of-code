@@ -1,21 +1,21 @@
-import { colors } from "jsr:@cliffy/ansi@1.0.0-rc.7/colors";
-import { Command } from "jsr:@cliffy/command@1.0.0-rc.7";
-import { Number } from "jsr:@cliffy/prompt@1.0.0-rc.7";
-import { ensureDir, exists } from "jsr:@std/fs";
-import { resolve } from "jsr:@std/path";
-import { Result } from "../src/mod.ts";
-const formatDay = (day: number) => day.toString().padStart(2, "0");
+import { colors } from '@cliffy/ansi/colors';
+import { Command } from '@cliffy/command';
+import { Number } from '@cliffy/prompt';
+import { Result } from '@mimi/aoc';
+import { ensureDir, exists } from '@std/fs';
+import { resolve } from '@std/path';
+const formatDay = (day: number) => day.toString().padStart(2, '0');
 
 namespace Validation {
   const Messages = {
-    dayError: `- ${colors.bold.red("[Validation Error]")} ${colors.bold.yellow("Day")} must be between ${
-      colors.yellow("1")
-    } and ${colors.yellow("25")}.`,
-    yearError: `- ${colors.bold.red("[Validation Error]")} ${colors.bold.yellow("Year")} must be between ${
-      colors.yellow("2000")
-    } and ${colors.yellow("2050")}.`,
-    sessionError: `- ${colors.bold.red("[Validation Error]")} ${
-      colors.bold.yellow("SessionId")
+    dayError: `- ${colors.bold.red('[Validation Error]')} ${colors.bold.yellow('Day')} must be between ${
+      colors.yellow('1')
+    } and ${colors.yellow('25')}.`,
+    yearError: `- ${colors.bold.red('[Validation Error]')} ${colors.bold.yellow('Year')} must be between ${
+      colors.yellow('2000')
+    } and ${colors.yellow('2050')}.`,
+    sessionError: `- ${colors.bold.red('[Validation Error]')} ${
+      colors.bold.yellow('SESSION_ID')
     } must be set within .env file.`,
   };
 
@@ -36,9 +36,9 @@ namespace Validation {
 
 namespace Prompt {
   export const year = async () =>
-    await Number.prompt({ message: "Year", hint: "Must be between 2000 and 2050.", min: 2000, max: 2050 });
+    await Number.prompt({ message: 'Year', hint: 'Must be between 2000 and 2050.', min: 2000, max: 2050 });
   export const day = async () =>
-    await Number.prompt({ message: "Day", hint: "Must be between 1 and 25.", min: 1, max: 25 });
+    await Number.prompt({ message: 'Day', hint: 'Must be between 1 and 25.', min: 1, max: 25 });
 }
 
 namespace Creator {
@@ -77,9 +77,9 @@ await createPuzzleBench({
   };
 
   const Messages = {
-    skip: (path: string) => ` - ${colors.gray("[skip]")} ${colors.yellow(`${path} exists...`)}`,
-    fetching: (path: string) => ` - ${colors.gray("[fetching]")} ${colors.yellow(`${path}`)}...`,
-    created: (path: string) => ` - ${colors.green("[created]")} ${colors.yellow(`${path}`)}.`,
+    skip: (path: string) => ` - ${colors.gray('[skip]')} ${colors.yellow(`${path} exists...`)}`,
+    fetching: (path: string) => ` - ${colors.gray('[fetching]')} ${colors.yellow(`${path}`)}...`,
+    created: (path: string) => ` - ${colors.green('[created]')} ${colors.yellow(`${path}`)}.`,
   };
 
   type CreatableFile<T> = {
@@ -121,12 +121,12 @@ await createPuzzleBench({
   };
 
   export const createResources = async (yearDir: string, year: number, day: number) => {
-    const resDir = resolve(yearDir, "resources", `day-${formatDay(day)}`);
+    const resDir = resolve(yearDir, 'resources', `day-${formatDay(day)}`);
     await ensureDir(resDir);
 
     const files: CreatableFile<() => Promise<Result<string, string>>>[] = [
-      { path: "input-test.txt", content: () => Network.fetchInputTest(year, day) },
-      { path: "input-user.txt", content: () => Network.fetchInputUser(year, day) },
+      { path: 'input-test.txt', content: () => Network.fetchInputTest(year, day) },
+      { path: 'input-user.txt', content: () => Network.fetchInputUser(year, day) },
     ];
 
     const filesToCreate = await filterFiles(files, resDir);
@@ -148,16 +148,16 @@ await createPuzzleBench({
 namespace Network {
   const Messages = {
     noHtml: (year: number, day: number) =>
-      ` - ${colors.bold.red("[no-html]")} Failed to fetch puzzle HTML for ${year}/${day}.`,
+      ` - ${colors.bold.red('[no-html]')} Failed to fetch puzzle HTML for ${year}/${day}.`,
     noInputTest: (year: number, day: number) =>
-      ` - ${colors.bold.red("[no-input-test]")} Failed to find input test for ${year}/${day}.`,
+      ` - ${colors.bold.red('[no-input-test]')} Failed to find input test for ${year}/${day}.`,
     noInputUser: (year: number, day: number) =>
       ` - ${
-        colors.bold.red("[no-input-user]")
+        colors.bold.red('[no-input-user]')
       } Failed to fetch input user for ${year}/${day}. Validate whether your Session ID is valid.`,
   };
 
-  export const session = () => Deno.env.has("SESSION_ID") ? Deno.env.get("SESSION_ID")! : "";
+  export const session = () => Deno.env.has('SESSION_ID') ? Deno.env.get('SESSION_ID')! : '';
 
   const fetchPuzzleHtml = async (year: number, day: number): Promise<Result<string, string>> => {
     const url = `https://adventofcode.com/${year}/day/${day}`;
@@ -168,13 +168,13 @@ namespace Network {
   };
 
   const findInputTest = (text: string): string | null => {
-    const exampleIndex = text.indexOf("example");
+    const exampleIndex = text.indexOf('example');
     if (exampleIndex === -1) return null;
 
-    const preStart = text.indexOf("<pre><code>", exampleIndex);
+    const preStart = text.indexOf('<pre><code>', exampleIndex);
     if (preStart === -1) return null;
 
-    const preEnd = text.indexOf("</code></pre>", preStart);
+    const preEnd = text.indexOf('</code></pre>', preStart);
     if (preEnd === -1) return null;
 
     const source = text.slice(preStart + 11, preEnd);
@@ -200,29 +200,29 @@ namespace Network {
 }
 
 await new Command()
-  .name("create-day")
-  .description("Create a puzzle for the given year and day.")
-  .option("-y, --year <year:number>", "The year of the puzzle to create. Must be between 2000 and 2050.")
-  .option("-d, --day <day:number>", "The day of the puzzle to create. Must be between 1 and 25.")
+  .name('create-day')
+  .description('Create a puzzle for the given year and day.')
+  .option('-y, --year <year:number>', 'The year of the puzzle to create. Must be between 2000 and 2050.')
+  .option('-d, --day <day:number>', 'The day of the puzzle to create. Must be between 1 and 25.')
   .action(async ({ year, day }) => {
     if (!year) year = await Prompt.year();
     if (!day) day = await Prompt.day();
     const validation = Validation.validate(year, day, Network.session());
     if (!validation.ok) {
-      console.info(validation.error.join("\n"));
+      console.info(validation.error.join('\n'));
       Deno.exit(1);
     }
 
-    const yearDir = resolve(Deno.cwd(), "src", `${year}`);
+    const yearDir = resolve(Deno.cwd(), 'src', `${year}`);
 
-    console.info(colors.green("Creating puzzle files..."));
+    console.info(colors.green('Creating puzzle files...'));
     await Creator.createFiles(yearDir, day);
 
     console.info();
 
-    console.info(colors.green("Creating resources..."));
+    console.info(colors.green('Creating resources...'));
     await Creator.createResources(yearDir, year, day);
 
-    console.info(colors.bold.green("Done!"));
+    console.info(colors.bold.green('Done!'));
   })
   .parse(Deno.args);

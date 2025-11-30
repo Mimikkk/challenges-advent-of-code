@@ -1,8 +1,8 @@
-import { Puzzle } from "../../types/puzzle.ts";
+import { Puzzle } from '../../types/puzzle.ts';
 
-const isDigit = (char: string) => char >= "0" && char <= "9";
-const isComma = (char: string) => char === ",";
-const isCloseParen = (char: string) => char === ")";
+const isDigit = (char: string) => char >= '0' && char <= '9';
+const isComma = (char: string) => char === ',';
+const isCloseParen = (char: string) => char === ')';
 const isPattern = (content: string, from: number, pattern: string): boolean => {
   for (let i = 0; i < pattern.length; i++) {
     if (content.charAt(from + i) !== pattern.charAt(i)) {
@@ -28,7 +28,7 @@ const sumMultiplications = (content: string) => {
   let result = 0;
 
   for (let i = 0; i < content.length; ++i) {
-    if (isPattern(content, i, "mul(")) {
+    if (isPattern(content, i, 'mul(')) {
       const [value, next] = collectMultiplication(content, i + 4);
       if (value !== null) result += value;
       i = next;
@@ -43,14 +43,14 @@ const sumEnablingMultiplications = (content: string) => {
   let enabled = true;
 
   for (let i = 0; i < content.length; ++i) {
-    if (enabled && isPattern(content, i, "mul(")) {
+    if (enabled && isPattern(content, i, 'mul(')) {
       const [value, next] = collectMultiplication(content, i + 4);
       if (value !== null) result += value;
       i = next;
     } else if (isPattern(content, i, "don't()")) {
       enabled = false;
       i += 6;
-    } else if (isPattern(content, i, "do()")) {
+    } else if (isPattern(content, i, 'do()')) {
       enabled = true;
       i += 3;
     }

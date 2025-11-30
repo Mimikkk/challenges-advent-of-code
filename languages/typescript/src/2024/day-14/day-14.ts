@@ -1,9 +1,9 @@
-import type { Const } from "../../types/const.ts";
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Counter } from "../../utils/datatypes/counter.ts";
-import { Str } from "../../utils/strs.ts";
+import type { Const } from '../../types/const.ts';
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Counter } from '../../utils/datatypes/counter.ts';
+import { Str } from '../../utils/strs.ts';
 
 class Robot {
   static new(position: Vec2 = Vec2.new(), velocity: Vec2 = Vec2.new()): Robot {

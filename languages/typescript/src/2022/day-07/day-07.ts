@@ -1,9 +1,9 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 class Location {
   static new() {
-    return new this([], [""]);
+    return new this([], ['']);
   }
   private constructor(private location: string[], private paths: string[]) {}
 
@@ -23,17 +23,17 @@ class Location {
 
   move(path: string) {
     switch (path) {
-      case "/":
+      case '/':
         this.location.length = 0;
         this.paths.length = 1;
         break;
-      case "..":
+      case '..':
         this.location.pop();
         this.paths.pop();
         break;
       default:
         this.location.push(path);
-        this.paths.push(this.location.join("/"));
+        this.paths.push(this.location.join('/'));
         break;
     }
   }
@@ -48,10 +48,10 @@ const calcuateSizes = (lines: string[]) => {
 
   for (let i = 0; i < lines.length; ++i) {
     const line = lines[i];
-    const [first, second, third] = line.split(" ");
+    const [first, second, third] = line.split(' ');
 
-    if (first === "$") {
-      if (second === "ls") {
+    if (first === '$') {
+      if (second === 'ls') {
         const sourceStr = location.path();
 
         let count = counts.get(sourceStr);
@@ -66,14 +66,14 @@ const calcuateSizes = (lines: string[]) => {
         for (++i, count = 0; i < lines.length; ++i) {
           ++count;
           const line = lines[i];
-          const [first] = line.split(" ");
+          const [first] = line.split(' ');
 
-          if (first !== "dir") {
+          if (first !== 'dir') {
             const filesize = +first;
             size += filesize;
           }
 
-          if (lines[i + 1]?.[0] === "$") break;
+          if (lines[i + 1]?.[0] === '$') break;
         }
         counts.set(sourceStr, count);
         sizes.set(sourceStr, size);
@@ -83,7 +83,7 @@ const calcuateSizes = (lines: string[]) => {
           sizes.set(path, sizes.get(path)! + size);
           path = parents.get(path);
         }
-      } else if (second === "cd") {
+      } else if (second === 'cd') {
         location.move(third);
       }
     }
@@ -103,7 +103,7 @@ const sumOverSize = (sizes: Map<string, number>, value: number) => {
 
 const findSmallestToRemove = (sizes: Map<string, number>, value: number): number => {
   const DiskSpace = 70_000_000;
-  const UsedSpace = sizes.get("")!;
+  const UsedSpace = sizes.get('')!;
   const ToFree = value + UsedSpace - DiskSpace;
 
   let min = UsedSpace;

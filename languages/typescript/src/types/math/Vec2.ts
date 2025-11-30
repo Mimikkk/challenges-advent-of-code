@@ -1,4 +1,4 @@
-import type { Const } from "../const.ts";
+import type { Const } from '../const.ts';
 
 export class Vec2 {
   static new(x: number = 0, y: number = 0): self {

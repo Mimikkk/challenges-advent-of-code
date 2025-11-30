@@ -1,6 +1,6 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { sum } from "../../utils/maths.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { sum } from '../../utils/maths.ts';
+import { Str } from '../../utils/strs.ts';
 
 const top1 = (values: (number | null)[]): number => {
   let max = 0;
@@ -42,7 +42,7 @@ const iterateSums = (values: (number | null)[], onSum: (total: number) => void) 
 };
 
 export default Puzzle.new({
-  prepare: (text) => Str.lines(text).map((line) => line === "" ? null : +line),
+  prepare: (text) => Str.lines(text).map((line) => line === '' ? null : +line),
   easy: top1,
   hard: top3,
 });

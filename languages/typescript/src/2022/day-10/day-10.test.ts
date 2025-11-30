@@ -1,6 +1,6 @@
-import { Str } from "../../mod.ts";
-import { createPuzzleTest } from "../../utils/create-puzzle-test.ts";
-import puzzle from "./day-10.ts";
+import { createPuzzleTest } from '../../utils/create-puzzle-test.ts';
+import { Str } from '../../utils/strs.ts';
+import puzzle from './day-10.ts';
 
 createPuzzleTest({
   puzzle,

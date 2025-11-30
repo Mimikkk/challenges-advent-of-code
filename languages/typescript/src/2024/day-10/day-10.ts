@@ -1,8 +1,8 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
-const createHeightMap = (content: string): number[][] => Str.lines(content).map((line) => line.split("").map(Number));
+const createHeightMap = (content: string): number[][] => Str.lines(content).map((line) => line.split('').map(Number));
 
 const neighbours = [
   [-1, 0],

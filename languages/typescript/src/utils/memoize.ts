@@ -5,7 +5,7 @@ export interface MemoizedFn<This, Fn extends (this: This, ...args: any[]) => any
 
 export const memoize = <This, Fn extends (this: This, ...args: any[]) => any, K = string>(
   fn: Fn,
-  createId: (this: This, ...args: Parameters<Fn>) => K = (...args) => args.join(",") as K,
+  createId: (this: This, ...args: Parameters<Fn>) => K = (...args) => args.join(',') as K,
 ): MemoizedFn<This, Fn, K> => {
   const result: MemoizedFn<This, Fn, K> = function self(...args) {
     const cache = self.cache;
@@ -24,7 +24,7 @@ export const memoize = <This, Fn extends (this: This, ...args: any[]) => any, K 
 };
 
 export const memoized = <This extends object, Fn extends (this: This, ...args: any[]) => any, K = string>(
-  createId: (this: This, ...args: Parameters<Fn>) => K = (...args) => args.join(",") as K,
+  createId: (this: This, ...args: Parameters<Fn>) => K = (...args) => args.join(',') as K,
 ) => {
   const map = new WeakMap<This, Map<K, ReturnType<Fn>>>();
 

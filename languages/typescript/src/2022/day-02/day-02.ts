@@ -1,17 +1,17 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { sum } from "../../utils/maths.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { sum } from '../../utils/maths.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Outcome {
-  Win = "win",
-  Lose = "lose",
-  Draw = "draw",
+  Win = 'win',
+  Lose = 'lose',
+  Draw = 'draw',
 }
 
 enum Choice {
-  Rock = "rock",
-  Paper = "paper",
-  Scissor = "scissor",
+  Rock = 'rock',
+  Paper = 'paper',
+  Scissor = 'scissor',
 }
 
 type Round = [opponent: Choice, player: Choice];
@@ -96,14 +96,14 @@ const scoreMatch = (match: Match): number => {
 
 const decodeShape = (code: string): Choice => {
   switch (code) {
-    case "A":
-    case "X":
+    case 'A':
+    case 'X':
       return Choice.Rock;
-    case "B":
-    case "Y":
+    case 'B':
+    case 'Y':
       return Choice.Paper;
-    case "Z":
-    case "C":
+    case 'Z':
+    case 'C':
       return Choice.Scissor;
     default:
       throw Error(`Invalid encoding: '${code}'.`);
@@ -112,18 +112,18 @@ const decodeShape = (code: string): Choice => {
 
 const decodeOutcome = (code: string): Outcome => {
   switch (code) {
-    case "X":
+    case 'X':
       return Outcome.Lose;
-    case "Y":
+    case 'Y':
       return Outcome.Draw;
-    case "Z":
+    case 'Z':
       return Outcome.Win;
     default:
       throw Error(`Invalid encoding: '${code}'.`);
   }
 };
 
-const decodeRound = (code: string): Round => code.split(" ").map(decodeShape) as Round;
+const decodeRound = (code: string): Round => code.split(' ').map(decodeShape) as Round;
 
 const selectShape = (opponentShape: Choice, expectedOutcome: Outcome): Choice => {
   switch (opponentShape) {
@@ -166,7 +166,7 @@ const selectShape = (opponentShape: Choice, expectedOutcome: Outcome): Choice =>
 };
 
 const decodeSetRound = (code: string): Round => {
-  const [opponentShapeCode, outcomeCode] = code.split(" ");
+  const [opponentShapeCode, outcomeCode] = code.split(' ');
   const opponentShape = decodeShape(opponentShapeCode);
 
   return [opponentShape, selectShape(opponentShape, decodeOutcome(outcomeCode))];

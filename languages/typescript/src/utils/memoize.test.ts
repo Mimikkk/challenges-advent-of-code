@@ -1,9 +1,9 @@
-import { memoize, memoized } from "./memoize.ts";
-import { describe, it } from "jsr:@std/testing/bdd";
-import { expect } from "jsr:@std/expect";
+import { expect } from '@std/expect';
+import { describe, it } from '@std/testing/bdd';
+import { memoize, memoized } from './memoize.ts';
 
-describe("Library - aoc - utils - memoize", () => {
-  it("should cache function results", () => {
+describe('Library - aoc - utils - memoize', () => {
+  it('should cache function results', () => {
     let calls = 0;
     const memoized = memoize((a: number, b: number) => {
       ++calls;
@@ -21,7 +21,7 @@ describe("Library - aoc - utils - memoize", () => {
     expect(calls).toBe(2);
   });
 
-  it("should use custom key generator", () => {
+  it('should use custom key generator', () => {
     let calls = 0;
     const memoized = memoize(
       (item: { id: number }) => {
@@ -37,7 +37,7 @@ describe("Library - aoc - utils - memoize", () => {
     expect(calls).toBe(1);
   });
 
-  it("should expose cache for manual management", () => {
+  it('should expose cache for manual management', () => {
     const memoized = memoize((x: number) => x * 2);
 
     memoized(5);
@@ -47,7 +47,7 @@ describe("Library - aoc - utils - memoize", () => {
     expect(memoized.cache.size).toBe(0);
   });
 
-  it("should memoize class methods", () => {
+  it('should memoize class methods', () => {
     let calls = 0;
     class Greeter {
       constructor(public message: string) {}
@@ -56,29 +56,29 @@ describe("Library - aoc - utils - memoize", () => {
       greet(argument: string) {
         ++calls;
 
-        return "Hello, " + this.message + " and " + argument;
+        return 'Hello, ' + this.message + ' and ' + argument;
       }
     }
 
     expect(calls).toBe(0);
-    const greeter = new Greeter("World");
-    expect(greeter.greet("a")).toBe("Hello, World and a");
+    const greeter = new Greeter('World');
+    expect(greeter.greet('a')).toBe('Hello, World and a');
     expect(calls).toBe(1);
-    expect(greeter.greet("a")).toBe("Hello, World and a");
+    expect(greeter.greet('a')).toBe('Hello, World and a');
     expect(calls).toBe(1);
-    expect(greeter.greet("b")).toBe("Hello, World and b");
+    expect(greeter.greet('b')).toBe('Hello, World and b');
     expect(calls).toBe(2);
-    expect(greeter.greet("a")).toBe("Hello, World and a");
+    expect(greeter.greet('a')).toBe('Hello, World and a');
     expect(calls).toBe(2);
 
-    const greeter2 = new Greeter("Gordon");
-    expect(greeter2.greet("a")).toBe("Hello, Gordon and a");
+    const greeter2 = new Greeter('Gordon');
+    expect(greeter2.greet('a')).toBe('Hello, Gordon and a');
     expect(calls).toBe(3);
-    expect(greeter2.greet("a")).toBe("Hello, Gordon and a");
+    expect(greeter2.greet('a')).toBe('Hello, Gordon and a');
     expect(calls).toBe(3);
-    expect(greeter2.greet("b")).toBe("Hello, Gordon and b");
+    expect(greeter2.greet('b')).toBe('Hello, Gordon and b');
     expect(calls).toBe(4);
-    expect(greeter2.greet("a")).toBe("Hello, Gordon and a");
+    expect(greeter2.greet('a')).toBe('Hello, Gordon and a');
     expect(calls).toBe(4);
   });
 });

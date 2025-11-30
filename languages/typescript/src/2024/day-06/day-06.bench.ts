@@ -1,8 +1,8 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
-import puzzle, { type Board, Guard, Movement, Tile } from "./day-06.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { createPuzzleBench } from '../../utils/create-puzzle-bench.ts';
+import puzzle, { type Board, Guard, Movement, Tile } from './day-06.ts';
 
-const countPossibleLoops = (board: Board): number => {
+const _countPossibleLoops = (board: Board): number => {
   const start = board.findGuard();
   if (!start) return 0;
 
@@ -25,7 +25,7 @@ const countPossibleLoops = (board: Board): number => {
 
     const visited = new Set<string>();
     while (board.inBounds(guard.position)) {
-      const id = guard.position.x + "," + guard.position.y + "," + guard.direction;
+      const id = guard.position.x + ',' + guard.position.y + ',' + guard.direction;
       if (visited.has(id)) {
         count++;
         break;

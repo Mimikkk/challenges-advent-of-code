@@ -1,7 +1,7 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
-import { Str } from "../../utils/strs.ts";
-import puzzle from "./day-06.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { createPuzzleBench } from '../../utils/create-puzzle-bench.ts';
+import { Str } from '../../utils/strs.ts';
+import puzzle from './day-06.ts';
 
 const stackless = Puzzle.new({
   prepare: Str.trim,

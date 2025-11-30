@@ -1,4 +1,4 @@
-import { Puzzle } from "../../types/puzzle.ts";
+import { Puzzle } from '../../types/puzzle.ts';
 
 interface Segment {
   id: number | null;
@@ -6,7 +6,7 @@ interface Segment {
   size: number;
 }
 
-const parseSizes = (content: string) => content.split("").map((n) => +n);
+const parseSizes = (content: string) => content.split('').map((n) => +n);
 
 const compactTightChecksum = (sizes: number[]): number => {
   let total = 0;

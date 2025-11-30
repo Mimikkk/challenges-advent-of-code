@@ -1,7 +1,7 @@
-import type { Const } from "../../../../types/const.ts";
-import type { Cloneable } from "../classes/Cloneable.ts";
-import { PuzzleInput } from "../classes/PuzzleInput.ts";
-import type { Direction } from "../enums/direction.enum.ts";
+import type { Const } from '../../../../types/const.ts';
+import type { Cloneable } from '../classes/Cloneable.ts';
+import { PuzzleInput } from '../classes/PuzzleInput.ts';
+import type { Direction } from '../enums/direction.enum.ts';
 
 export class HistoryRecord implements Cloneable<HistoryRecord> {
   static new(input: PuzzleInput = PuzzleInput.new(), moves: Direction[] = []): self {

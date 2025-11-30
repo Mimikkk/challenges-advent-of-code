@@ -1,9 +1,9 @@
-import type { Const } from "../../../../types/const.ts";
-import type { Direction } from "../enums/direction.enum.ts";
-import type { Cloneable } from "./Cloneable.ts";
-import type { Obstacle } from "./entities/Obstacle.ts";
-import { Player } from "./entities/Player.ts";
-import { Walls } from "./entities/Walls.ts";
+import type { Const } from '../../../../types/const.ts';
+import type { Direction } from '../enums/direction.enum.ts';
+import type { Cloneable } from './Cloneable.ts';
+import type { Obstacle } from './entities/Obstacle.ts';
+import { Player } from './entities/Player.ts';
+import { Walls } from './entities/Walls.ts';
 
 export class PuzzleInput implements Cloneable<self> {
   static new(

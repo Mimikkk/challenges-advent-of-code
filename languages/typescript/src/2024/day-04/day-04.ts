@@ -1,14 +1,14 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
-export const parseGrid = (content: string): string[][] => Str.lines(content).map((s) => s.split(""));
+export const parseGrid = (content: string): string[][] => Str.lines(content).map((s) => s.split(''));
 
 const neighbours = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, -1], [-1, 1]] as const;
-type ConnectionKey = "X" | "M" | "A" | "S";
+type ConnectionKey = 'X' | 'M' | 'A' | 'S';
 const connections = new Map<ConnectionKey, ConnectionKey>([
-  ["X", "M"],
-  ["M", "A"],
-  ["A", "S"],
+  ['X', 'M'],
+  ['M', 'A'],
+  ['A', 'S'],
 ]);
 
 const countXmas = (grid: string[][]): number => {
@@ -19,14 +19,14 @@ const countXmas = (grid: string[][]): number => {
   for (let i = 0; i < n; ++i) {
     const row = grid[i];
     for (let j = 0; j < m; ++j) {
-      if (row[j] !== "X") continue;
+      if (row[j] !== 'X') continue;
 
       const x = i;
       const y = j;
       for (let i = 0; i < neighbours.length; ++i) {
         const [dx, dy] = neighbours[i];
 
-        let key: ConnectionKey | undefined = "M";
+        let key: ConnectionKey | undefined = 'M';
         let xi = dx + x;
         let xj = dy + y;
         while (grid[xi]?.[xj] === key) {
@@ -68,11 +68,11 @@ const count2mas = (grid: string[][]): number => {
   for (let i = 1; i < nMax; ++i) {
     for (let j = 1; j < mMax; ++j) {
       if (
-        grid[i][j] === "A" && (
-          isPattern(i, j, "S", "S", "M", "M") ||
-          isPattern(i, j, "M", "S", "M", "S") ||
-          isPattern(i, j, "M", "M", "S", "S") ||
-          isPattern(i, j, "S", "M", "S", "M")
+        grid[i][j] === 'A' && (
+          isPattern(i, j, 'S', 'S', 'M', 'M') ||
+          isPattern(i, j, 'M', 'S', 'M', 'S') ||
+          isPattern(i, j, 'M', 'M', 'S', 'S') ||
+          isPattern(i, j, 'S', 'M', 'S', 'M')
         )
       ) ++count;
     }

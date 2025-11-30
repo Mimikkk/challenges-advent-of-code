@@ -1,6 +1,6 @@
-import type { Const } from "../../../../../types/const.ts";
-import type { Vec2 } from "../../../../../types/math/Vec2.ts";
-import { VecsColider } from "../coliders/VecsColider.ts";
+import type { Const } from '../../../../../types/const.ts';
+import type { Vec2 } from '../../../../../types/math/Vec2.ts';
+import { VecsColider } from '../coliders/VecsColider.ts';
 
 export class Obstacle {
   static new(positions: Vec2[] = [], colider = VecsColider.new()): self {

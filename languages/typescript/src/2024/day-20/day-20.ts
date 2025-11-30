@@ -1,14 +1,14 @@
-import { Ids } from "../../types/math/Ids.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { TileMap } from "../../utils/datatypes/tilemap.ts";
-import { Str } from "../../utils/strs.ts";
+import { Ids } from '../../types/math/Ids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { TileMap } from '../../utils/datatypes/tilemap.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Tile {
-  Track = ".",
-  Wall = "#",
-  Start = "S",
-  End = "E",
+  Track = '.',
+  Wall = '#',
+  Start = 'S',
+  End = 'E',
 }
 
 interface PuzzleInput {
@@ -18,13 +18,13 @@ interface PuzzleInput {
 }
 
 const parseInput = (content: string): PuzzleInput => {
-  const tilemap = TileMap.fromGrid(Str.lines(content).map((line) => line.split("")) as Tile[][]);
+  const tilemap = TileMap.fromGrid(Str.lines(content).map((line) => line.split('')) as Tile[][]);
 
   const start = tilemap.find(Tile.Start);
-  if (!start) throw new Error("Start not found");
+  if (!start) throw new Error('Start not found');
 
   const end = tilemap.find(Tile.End);
-  if (!end) throw new Error("End not found");
+  if (!end) throw new Error('End not found');
 
   return { tilemap, start, end };
 };

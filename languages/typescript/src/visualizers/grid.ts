@@ -1,16 +1,16 @@
-import { colors } from "jsr:@cliffy/ansi@1.0.0-rc.7/colors";
-import { Const } from "../types/const.ts";
+import { colors } from '@cliffy/ansi/colors';
+import type { Const } from '../types/const.ts';
 
 export type Mark = string | ((value: string) => string);
 export type Marker = [x: number, y: number, mark: Mark] | [x: number, y: number];
-const isMarker = (value: Const<Marker> | Const<Marker[]>): value is Marker => typeof value[0] === "number";
+const isMarker = (value: Const<Marker> | Const<Marker[]>): value is Marker => typeof value[0] === 'number';
 
 export class GridVisualizer<T> {
   static new<T>(
     grid: string[][] = [],
     on: boolean = true,
-    header: string = "",
-    footer: string = "",
+    header: string = '',
+    footer: string = '',
   ): self<T> {
     return new Self(grid, on, header, footer);
   }
@@ -51,7 +51,7 @@ export class GridVisualizer<T> {
   }
 
   fromBounds(x: number, y: number): this {
-    return this.fromGrid(Array.from({ length: x }, () => Array(y).fill(" ")));
+    return this.fromGrid(Array.from({ length: x }, () => Array(y).fill(' ')));
   }
 
   fromGrid(grid: T[][]): this {
@@ -71,9 +71,9 @@ export class GridVisualizer<T> {
   #highlight(marker: Const<Marker>): this;
   #highlight(x: number, y: number, mark?: Mark): this;
   #highlight(x: number | Const<Marker>, y?: number, mark: Mark = colors.brightYellow): this {
-    if (typeof x === "number") {
+    if (typeof x === 'number') {
       const value = this.#at(x, y!);
-      this.grid[x][y!] = typeof mark === "function" ? mark(value) : mark;
+      this.grid[x][y!] = typeof mark === 'function' ? mark(value) : mark;
       return this;
     }
 
@@ -107,7 +107,7 @@ export class GridVisualizer<T> {
   add(markers: Const<Marker[]>): this;
   add(x: number, y: number, mark?: Mark): this;
   add(value: number | Const<Marker> | Const<Marker[]>, y?: number, mark?: Mark): this {
-    if (typeof value === "number") {
+    if (typeof value === 'number') {
       return this.#highlight(value, y!, mark);
     }
 
@@ -124,7 +124,7 @@ export class GridVisualizer<T> {
   remove(markers: Const<Marker[]>): this;
   remove(x: number, y: number): this;
   remove(value: number | Const<Marker> | Const<Marker[]>, y?: number): this {
-    if (typeof value === "number") {
+    if (typeof value === 'number') {
       this.grid[value][y!] = colors.stripAnsiCode(this.grid[value][y!]);
       return this;
     }
@@ -146,7 +146,7 @@ export class GridVisualizer<T> {
   }
 
   clearHeader() {
-    return this.setHeader("");
+    return this.setHeader('');
   }
 
   setFooter(footer: string): this {
@@ -155,12 +155,12 @@ export class GridVisualizer<T> {
   }
 
   clearFooter(): this {
-    return this.setFooter("");
+    return this.setFooter('');
   }
 
   str(): string {
-    const pad = colors.brightBlack("-".repeat(colors.stripAnsiCode(this.grid[0].join("")).length));
-    const rows = this.grid.map((r) => r.join(""));
+    const pad = colors.brightBlack('-'.repeat(colors.stripAnsiCode(this.grid[0].join('')).length));
+    const rows = this.grid.map((r) => r.join(''));
     const result = [];
 
     result.push(pad);
@@ -169,7 +169,7 @@ export class GridVisualizer<T> {
     if (this.footer) result.push(this.footer);
     result.push(pad);
 
-    return result.join("\n");
+    return result.join('\n');
   }
 
   log(): this {

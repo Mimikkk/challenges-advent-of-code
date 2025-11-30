@@ -1,10 +1,10 @@
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Tile {
-  Start = "S",
-  End = "E",
+  Start = 'S',
+  End = 'E',
 }
 
 interface Input {
@@ -39,7 +39,7 @@ const parseInput = (content: string): Input => {
 
         height[j] = 26;
       } else {
-        if (tile === "a") {
+        if (tile === 'a') {
           starts.push(Vec2.new(i, j));
         }
         height[j] = tile.charCodeAt(0) - 97;
@@ -98,7 +98,7 @@ const findShortestPathLength = ({ starts: [from], destination: to, heights }: In
       const xdx = x + dx;
       const ydy = y + dy;
 
-      const id = xdx + "," + ydy + ":" + i;
+      const id = xdx + ',' + ydy + ':' + i;
       if (visited.has(id)) continue;
       visited.add(id);
 
@@ -135,7 +135,7 @@ const findShortestPathLengthMS = ({ starts, destination, heights }: Input): numb
       const xdx = x + dx;
       const ydy = y + dy;
 
-      const id = xdx + "," + ydy + ":" + i;
+      const id = xdx + ',' + ydy + ':' + i;
       if (visited.has(id)) continue;
       visited.add(id);
 

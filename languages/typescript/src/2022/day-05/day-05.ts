@@ -1,12 +1,12 @@
-import { Str } from "../../mod.ts";
-import { Puzzle } from "../../types/puzzle.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 type Move = [count: number, from: number, to: number];
 type Stack = string[];
 
 const parseMoves = (lines: string[]): Move[] =>
   lines.map((line) => {
-    const [, who, , from, , to] = line.split(" ");
+    const [, who, , from, , to] = line.split(' ');
 
     return [+who, +from - 1, +to - 1] as Move;
   });
@@ -20,7 +20,7 @@ const parseStacks = (lines: string[]): Stack[] => {
 
     for (let j = 0; j < lines.length; ++j) {
       const item = lines[j][i];
-      if (item === " ") continue;
+      if (item === ' ') continue;
       stack.push(item);
     }
 
@@ -31,7 +31,7 @@ const parseStacks = (lines: string[]): Stack[] => {
 };
 
 const splitLines = (lines: string[]): [stacksLines: string[], movesLines: string[]] => {
-  const splitIndex = lines.findIndex((line) => line === "");
+  const splitIndex = lines.findIndex((line) => line === '');
   const stacksLines = lines.splice(0, splitIndex + 1);
   stacksLines.pop();
   stacksLines.pop();
@@ -65,7 +65,7 @@ const readTopAfterMoves = (stacks: Stack[], moves: Move[], onMove: HandleMove): 
   return readTop(stacks);
 };
 
-const readTop = (stacks: Stack[]): string => stacks.map((stack) => stack[stack.length - 1]).join("");
+const readTop = (stacks: Stack[]): string => stacks.map((stack) => stack[stack.length - 1]).join('');
 
 export default Puzzle.new({
   prepare(content) {

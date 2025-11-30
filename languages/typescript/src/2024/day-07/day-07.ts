@@ -1,5 +1,5 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 type Equation = {
   operands: number[];
@@ -8,11 +8,11 @@ type Equation = {
 
 const parseEquations = (content: string): Equation[] =>
   Str.lines(content).map((line) => {
-    const [result, operands] = line.split(": ");
+    const [result, operands] = line.split(': ');
 
     return {
       result: +result,
-      operands: operands.split(" ").map(Number),
+      operands: operands.split(' ').map(Number),
     };
   });
 
@@ -49,14 +49,14 @@ const createStrategy = (
 };
 
 const isValidMulAdd = createStrategy([
-  ["+", (a, b) => a + b],
-  ["*", (a, b) => a * b],
+  ['+', (a, b) => a + b],
+  ['*', (a, b) => a * b],
 ]);
 
 const isValidMulAddJoin = createStrategy([
-  ["+", (a, b) => a + b],
-  ["*", (a, b) => a * b],
-  ["||", (a, b) => +`${a}${b}`],
+  ['+', (a, b) => a + b],
+  ['*', (a, b) => a * b],
+  ['||', (a, b) => +`${a}${b}`],
 ]);
 
 const sumValidEquationSums = (equations: Equation[], validate: (equation: Equation) => boolean) =>

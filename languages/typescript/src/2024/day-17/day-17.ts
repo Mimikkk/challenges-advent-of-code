@@ -1,5 +1,5 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 const re = { number: /(\d+)/g, pairs: /(\d+),(\d+)/g };
 
@@ -16,15 +16,15 @@ enum OperandCode {
 
 namespace OperandCode {
   export const toString = (operand: OperandCode) => {
-    if (operand === OperandCode.Literal0) return "Literal 0";
-    if (operand === OperandCode.Literal1) return "Literal 1";
-    if (operand === OperandCode.Literal2) return "Literal 2";
-    if (operand === OperandCode.Literal3) return "Literal 3";
-    if (operand === OperandCode.AccessA) return "Register A";
-    if (operand === OperandCode.AccessB) return "Register B";
-    if (operand === OperandCode.AccessC) return "Register C";
-    if (operand === OperandCode.Reserved) return "Reserved";
-    return "Unknown";
+    if (operand === OperandCode.Literal0) return 'Literal 0';
+    if (operand === OperandCode.Literal1) return 'Literal 1';
+    if (operand === OperandCode.Literal2) return 'Literal 2';
+    if (operand === OperandCode.Literal3) return 'Literal 3';
+    if (operand === OperandCode.AccessA) return 'Register A';
+    if (operand === OperandCode.AccessB) return 'Register B';
+    if (operand === OperandCode.AccessC) return 'Register C';
+    if (operand === OperandCode.Reserved) return 'Reserved';
+    return 'Unknown';
   };
 }
 
@@ -78,15 +78,15 @@ enum OperationCode {
 
 namespace OperationCode {
   export const toString = (operation: OperationCode) => {
-    if (operation === OperationCode.XorOBIntoB) return "Xor OB into B";
-    if (operation === OperationCode.TakeO3IntoB) return "Take O3 into B";
-    if (operation === OperationCode.JumpANotZeroToO) return "Jump if A is not zero to O";
-    if (operation === OperationCode.XorBCIntoB) return "Xor A and C into B";
-    if (operation === OperationCode.Output) return "Output";
-    if (operation === OperationCode.DivisionA) return "Division A";
-    if (operation === OperationCode.DivisionB) return "Division B";
-    if (operation === OperationCode.DivisionC) return "Division C";
-    return "Unknown";
+    if (operation === OperationCode.XorOBIntoB) return 'Xor OB into B';
+    if (operation === OperationCode.TakeO3IntoB) return 'Take O3 into B';
+    if (operation === OperationCode.JumpANotZeroToO) return 'Jump if A is not zero to O';
+    if (operation === OperationCode.XorBCIntoB) return 'Xor A and C into B';
+    if (operation === OperationCode.Output) return 'Output';
+    if (operation === OperationCode.DivisionA) return 'Division A';
+    if (operation === OperationCode.DivisionB) return 'Division B';
+    if (operation === OperationCode.DivisionC) return 'Division C';
+    return 'Unknown';
   };
 }
 
@@ -176,12 +176,10 @@ const runProgram = (input: PuzzleInput) => {
     index += 2;
   }
 
-  return output.join(",");
+  return output.join(',');
 };
 
-const findRegisterAvalueWhichMakesProgramReturnItself = (input: PuzzleInput) => {
-  const { program } = input;
-
+const findRegisterAvalueWhichMakesProgramReturnItself = (_input: PuzzleInput) => {
   return 0;
 };
 

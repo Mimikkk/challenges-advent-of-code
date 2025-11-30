@@ -1,12 +1,12 @@
-import { createPuzzleTest } from "../../utils/create-puzzle-test.ts";
-import puzzle from "./day-15.ts";
+import { createPuzzleTest } from '../../utils/create-puzzle-test.ts';
+import puzzle from './day-15.ts';
 
 createPuzzleTest({
   puzzle,
   easyTest: 10092,
-  easyTestInput: "type:input-test-big",
+  easyTestInput: 'type:input-test-big',
   easyUser: 1456590,
   hardTest: 9021,
-  hardTestInput: "type:input-test-big",
+  hardTestInput: 'type:input-test-big',
   hardUser: 1489116,
 });

@@ -1,5 +1,5 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 const parseGrid = (lines: string[]): number[][] => {
   const m = lines.length;
@@ -27,7 +27,7 @@ const countVisibleTrees = (grid: number[][]): number => {
   const mMax = m - 1;
   const nMax = n - 1;
 
-  const createId = (x: number, y: number): string => x.toString() + "," + y.toString();
+  const createId = (x: number, y: number): string => x.toString() + ',' + y.toString();
 
   const visibles = new Set<string>();
   for (let i = 1; i < mMax; ++i) {

@@ -1,8 +1,8 @@
-import { Puzzle } from "../../types/puzzle.ts";
-import { Counter } from "../../utils/datatypes/counter.ts";
-import { Str } from "../../utils/strs.ts";
+import { Puzzle } from '../../types/puzzle.ts';
+import { Counter } from '../../utils/datatypes/counter.ts';
+import { Str } from '../../utils/strs.ts';
 
-const parseStones = (content: string): string[] => content.split(" ");
+const parseStones = (content: string): string[] => content.split(' ');
 
 const stoneCountAfterNBlinks = (stones: string[], rounds: number) => {
   let counter = Counter.fromArray(stones);
@@ -11,12 +11,12 @@ const stoneCountAfterNBlinks = (stones: string[], rounds: number) => {
     const next = Counter.new<string>();
 
     for (const [stone, count] of counter.entries()) {
-      if (stone === "0") {
-        next.add("1", count);
+      if (stone === '0') {
+        next.add('1', count);
       } else if (stone.length % 2 === 0) {
         const half = stone.length / 2;
-        const left = Str.trimStart(stone.substring(0, half), "0");
-        const right = Str.trimStart(stone.substring(half), "0");
+        const left = Str.trimStart(stone.substring(0, half), '0');
+        const right = Str.trimStart(stone.substring(half), '0');
 
         next.add(left, count);
         next.add(right, count);

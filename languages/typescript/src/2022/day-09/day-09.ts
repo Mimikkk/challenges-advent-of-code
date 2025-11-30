@@ -1,18 +1,18 @@
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { Str } from '../../utils/strs.ts';
 
 enum Direction {
-  Up = "U",
-  Down = "D",
-  Left = "L",
-  Right = "R",
+  Up = 'U',
+  Down = 'D',
+  Left = 'L',
+  Right = 'R',
 }
 type Move = [direction: Direction, count: number];
 
 const parseMoves = (content: string): Move[] =>
   Str.lines(content).map((line) => {
-    const [direction, count] = line.split(" ");
+    const [direction, count] = line.split(' ');
     return [direction, +count] as Move;
   });
 

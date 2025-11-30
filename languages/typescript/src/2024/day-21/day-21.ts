@@ -1,11 +1,11 @@
-import type { Const } from "../../types/const.ts";
-import { Vec2 } from "../../types/math/Vec2.ts";
-import { Puzzle } from "../../types/puzzle.ts";
-import { sumBy } from "../../utils/maths.ts";
-import { Str } from "../../utils/strs.ts";
+import type { Const } from '../../types/const.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
+import { Puzzle } from '../../types/puzzle.ts';
+import { sumBy } from '../../utils/maths.ts';
+import { Str } from '../../utils/strs.ts';
 
 const parseCodes = (content: string): NumericKey[][] =>
-  Str.lines(content).map((line) => line.split("") as NumericKey[]);
+  Str.lines(content).map((line) => line.split('') as NumericKey[]);
 
 type KeyMap<K extends string> = Map<K, Vec2>;
 
@@ -97,26 +97,26 @@ class Keypad<K extends string> {
   }
 }
 
-const DirectionalKeypad = Keypad.fromLayout([
-  ["^", Vec2.new(0, 1)],
-  ["A", Vec2.new(0, 2)],
-  ["<", Vec2.new(1, 0)],
-  ["v", Vec2.new(1, 1)],
-  [">", Vec2.new(1, 2)],
+const _DirectionalKeypad = Keypad.fromLayout([
+  ['^', Vec2.new(0, 1)],
+  ['A', Vec2.new(0, 2)],
+  ['<', Vec2.new(1, 0)],
+  ['v', Vec2.new(1, 1)],
+  ['>', Vec2.new(1, 2)],
 ]);
 
 const NumericKeypad = Keypad.fromLayout([
-  ["7", Vec2.new(0, 0)],
-  ["8", Vec2.new(0, 1)],
-  ["9", Vec2.new(0, 2)],
-  ["4", Vec2.new(1, 0)],
-  ["5", Vec2.new(1, 1)],
-  ["6", Vec2.new(1, 2)],
-  ["1", Vec2.new(2, 0)],
-  ["2", Vec2.new(2, 1)],
-  ["3", Vec2.new(2, 2)],
-  ["0", Vec2.new(3, 1)],
-  ["A", Vec2.new(3, 2)],
+  ['7', Vec2.new(0, 0)],
+  ['8', Vec2.new(0, 1)],
+  ['9', Vec2.new(0, 2)],
+  ['4', Vec2.new(1, 0)],
+  ['5', Vec2.new(1, 1)],
+  ['6', Vec2.new(1, 2)],
+  ['1', Vec2.new(2, 0)],
+  ['2', Vec2.new(2, 1)],
+  ['3', Vec2.new(2, 2)],
+  ['0', Vec2.new(3, 1)],
+  ['A', Vec2.new(3, 2)],
 ]);
 
 // class KeypadController<K extends string> {
@@ -151,13 +151,13 @@ const NumericKeypad = Keypad.fromLayout([
 //   }
 // }
 
-type NumericKey = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "A";
-type DirectionalKey = "^" | "A" | "<" | "v" | ">" | "B";
+type NumericKey = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'A';
+type DirectionalKey = '^' | 'A' | '<' | 'v' | '>' | 'B';
 
-const calculateCodeNumber = (code: NumericKey[]): number => +code.filter((char) => char >= "0" && char <= "9").join("");
-const calculateCodeAccessStrokeCount = (code: NumericKey[]): number => {
-  let from: NumericKey = "A";
-  console.log(NumericKeypad.getShortestPathsFromTo(from, "9"));
+const calculateCodeNumber = (code: NumericKey[]): number => +code.filter((char) => char >= '0' && char <= '9').join('');
+const calculateCodeAccessStrokeCount = (_code: NumericKey[]): number => {
+  const from: NumericKey = 'A';
+  console.log(NumericKeypad.getShortestPathsFromTo(from, '9'));
 
   return 0;
 };

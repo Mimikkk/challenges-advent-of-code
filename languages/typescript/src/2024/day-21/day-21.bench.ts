@@ -1,6 +1,5 @@
-
-import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
-import puzzle from "./day-21.ts";
+import { createPuzzleBench } from '../../utils/create-puzzle-bench.ts';
+import puzzle from './day-21.ts';
 
 await createPuzzleBench({
   baseline: puzzle,

@@ -1,5 +1,5 @@
-import type { Const } from "../const.ts";
-import { Vec2 } from "./Vec2.ts";
+import type { Const } from '../const.ts';
+import { Vec2 } from './Vec2.ts';
 
 export namespace Ids {
   export const ni8 = (x: number, offset: number): number => (x & 0xFF) << offset;

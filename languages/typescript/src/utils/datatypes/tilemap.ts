@@ -1,4 +1,4 @@
-import { Vec2 } from "../../types/math/Vec2.ts";
+import { Vec2 } from '../../types/math/Vec2.ts';
 
 export class TileMap<T extends string> {
   static new<T extends string>(grid: T[][] = [], n: number = 0, m: number = 0): self<T> {
