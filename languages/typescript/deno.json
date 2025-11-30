@@ -8,9 +8,13 @@
   },
   "license": "MIT",
   "tasks": {
-    "create-day": {
+    "new-year": {
+      "description": "Create a new year directory",
+      "command": "deno run --allow-read --allow-write --allow-net --env-file=.env --allow-env ./scripts/new-year.ts"
+    },
+    "new-day": {
       "description": "Create a puzzle for the given year and day",
-      "command": "deno run --allow-read --allow-write --allow-net --env-file=.env --allow-env ./scripts/create-day.ts"
+      "command": "deno run --allow-read --allow-write --allow-net --env-file=.env --allow-env ./scripts/new-day.ts"
     },
     "test": {
       "description": "Run tests",

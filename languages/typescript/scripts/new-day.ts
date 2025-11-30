@@ -200,7 +200,7 @@ namespace Network {
 }
 
 await new Command()
-  .name('create-day')
+  .name('new-day')
   .description('Create a puzzle for the given year and day.')
   .option('-y, --year <year:number>', 'The year of the puzzle to create. Must be between 2000 and 2050.')
   .option('-d, --day <day:number>', 'The day of the puzzle to create. Must be between 1 and 25.')
