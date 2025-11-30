@@ -2,10 +2,10 @@ import { Puzzle } from '../../types/puzzle.ts';
 import { minBy } from '../../utils/maths.ts';
 import { Str } from '../../utils/strs.ts';
 
-type SeedMapRange = [destinationStart: number, sourceStart: number, rangeLength: number];
+type SeedTransform = [destinationStart: number, sourceStart: number, rangeLength: number];
 type SeedRange = [start: number, length: number];
 
-const applyMap = (value: number, map: SeedMapRange[]): number => {
+const applyMap = (value: number, map: SeedTransform[]): number => {
   for (const [destinationStart, sourceStart, rangeLength] of map) {
     const sourceEnd = sourceStart + rangeLength;
 
@@ -16,7 +16,7 @@ const applyMap = (value: number, map: SeedMapRange[]): number => {
   return value;
 };
 
-const applyMaps = (value: number, maps: SeedMapRange[][]): number => {
+const applyMaps = (value: number, maps: SeedTransform[][]): number => {
   for (const map of maps) {
     value = applyMap(value, map);
   }
@@ -33,12 +33,12 @@ export default Puzzle.new({
       .map((s) => +s)
       .slice(1);
 
-    const maps: SeedMapRange[][] = Array(7);
+    const maps: SeedTransform[][] = Array(7);
     for (let i = 0; i < 7; ++i) maps[i] = [];
 
     for (let i = 2, j = 0, it = mapsStrs.length; i < it; i += 2, ++j) {
       while (mapsStrs[i] !== '' && i < it) {
-        maps[j].push(mapsStrs[i++].split(' ').map((s) => +s) as SeedMapRange);
+        maps[j].push(mapsStrs[i++].split(' ').map((s) => +s) as SeedTransform);
       }
     }
 
@@ -48,54 +48,51 @@ export default Puzzle.new({
     return minBy(seeds, (value) => applyMaps(value, maps));
   },
   hard({ seeds, maps }) {
-    let values: SeedRange[] = Array(seeds.length / 2);
+    let ranges: SeedRange[] = Array(seeds.length / 2);
     for (let i = 0; i < seeds.length; i += 2) {
-      values[i / 2] = [seeds[i], seeds[i + 1]];
+      ranges[i / 2] = [seeds[i], seeds[i + 1]];
     }
 
-    for (const map of maps) {
-      values = ((ranges: SeedRange[]) => {
-        const result: SeedRange[] = [];
+    const applyTransform = (ranges: SeedRange[], range: SeedRange, transforms: SeedTransform[]): SeedRange => {
+      const [rangeStart, rangeLength] = range;
+      const rangeEnd = rangeStart + rangeLength;
 
-        while (ranges.length > 0) {
-          const range = ranges.pop()!;
+      for (const [destStart, sourceStart, sourceLength] of transforms) {
+        const sourceEnd = sourceStart + sourceLength;
+        if (rangeStart >= sourceEnd || sourceStart >= rangeEnd) continue;
 
-          const transform = (range: SeedRange): SeedRange => {
-            const [valueStart, valueLength] = range;
-            const valueEnd = valueStart + valueLength;
+        const overlapStart = Math.max(rangeStart, sourceStart);
+        const overlapEnd = Math.min(rangeEnd, sourceEnd);
+        const overlapLength = overlapEnd - overlapStart;
 
-            for (const [destinationStart, sourceStart, size] of map) {
-              const sourceEnd = sourceStart + size;
-              if (valueStart >= sourceEnd || sourceStart >= valueEnd) continue;
-
-              const overlapStart = Math.max(valueStart, sourceStart);
-              const overlapEnd = Math.min(valueEnd, sourceEnd);
-              const overlapLength = overlapEnd - overlapStart;
-
-              // check left side for extra overlap
-              if (overlapStart > valueStart) {
-                ranges.push([valueStart, overlapStart - valueStart]);
-              }
-
-              // check right side for extra overlap
-              if (overlapEnd < valueEnd) {
-                ranges.push([overlapEnd, valueEnd - overlapEnd]);
-              }
-
-              const transformedStart = destinationStart + overlapStart - sourceStart;
-              return [transformedStart, overlapLength];
-            }
-
-            return range;
-          };
-
-          result.push(transform(range));
+        if (overlapStart > rangeStart) {
+          ranges.push([rangeStart, overlapStart - rangeStart]);
         }
 
-        return result;
-      })(values);
+        if (overlapEnd < rangeEnd) {
+          ranges.push([overlapEnd, rangeEnd - overlapEnd]);
+        }
+
+        return [destStart + (overlapStart - sourceStart), overlapLength];
+      }
+
+      return range;
+    };
+
+    const applyTransforms = (ranges: SeedRange[], transforms: SeedTransform[]): SeedRange[] => {
+      const result: SeedRange[] = [];
+
+      for (const range of ranges) {
+        result.push(applyTransform(ranges, range, transforms));
+      }
+
+      return result;
+    };
+
+    for (const map of maps) {
+      ranges = applyTransforms(ranges, map);
     }
 
-    return Math.min(...values.map(([start]) => start));
+    return Math.min(...ranges.map(([start]) => start));
   },
 });
