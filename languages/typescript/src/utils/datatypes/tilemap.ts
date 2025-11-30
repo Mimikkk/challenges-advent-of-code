@@ -53,14 +53,16 @@ export class TileMap<T extends string> {
     }
   }
 
-  filter(tile: T): Vec2[] {
+  filter(predicate: ((tile: T) => boolean) | T): Vec2[] {
     const { n, m, grid } = this;
+    const isValid = typeof predicate === 'function' ? predicate : (tile: T) => tile === predicate;
 
     const result: Vec2[] = [];
     for (let i = 0; i < n; ++i) {
       const row = grid[i];
       for (let j = 0; j < m; ++j) {
-        if (row[j] === tile) result.push(Vec2.new(i, j));
+        if (!isValid(row[j])) continue;
+        result.push(Vec2.new(i, j));
       }
     }
 
