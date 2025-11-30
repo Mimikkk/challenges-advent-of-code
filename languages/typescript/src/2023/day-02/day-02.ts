@@ -46,11 +46,11 @@ const findGamePower = (game: Game): number => {
 };
 
 export default Puzzle.new({
-  prepare: Str.lines,
-  easy(strs) {
-    return sum(parseGames(strs).map((game, i) => isGamePossible(game) ? i + 1 : 0));
+  prepare: (text) => parseGames(Str.lines(text)),
+  easy(games) {
+    return sum(games.map((game, i) => isGamePossible(game) ? i + 1 : 0));
   },
-  hard(strs) {
-    return sum(parseGames(strs).map(findGamePower));
+  hard(games) {
+    return sum(games.map(findGamePower));
   },
 });
