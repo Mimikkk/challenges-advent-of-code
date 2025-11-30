@@ -2,19 +2,21 @@ import { Puzzle } from '../../types/puzzle.ts';
 import { minBy } from '../../utils/maths.ts';
 import { Str } from '../../utils/strs.ts';
 
-type SeedMap = [destination: number, source: number, size: number];
-type Range = [start: number, size: number];
+type SeedMapRange = [destinationStart: number, sourceStart: number, rangeLength: number];
+type SeedRange = [start: number, length: number];
 
-const applyMap = (value: number, map: SeedMap[]): number => {
-  for (const [destination, source, range] of map) {
-    if (value < source || value >= source + range) continue;
-    return destination + (value - source);
+const applyMap = (value: number, map: SeedMapRange[]): number => {
+  for (const [destinationStart, sourceStart, rangeLength] of map) {
+    const sourceEnd = sourceStart + rangeLength;
+
+    if (value < sourceStart || value >= sourceEnd) continue;
+    return destinationStart + value - sourceStart;
   }
 
   return value;
 };
 
-const applyMaps = (value: number, maps: SeedMap[][]): number => {
+const applyMaps = (value: number, maps: SeedMapRange[][]): number => {
   for (const map of maps) {
     value = applyMap(value, map);
   }
@@ -31,12 +33,12 @@ export default Puzzle.new({
       .map((s) => +s)
       .slice(1);
 
-    const maps: SeedMap[][] = Array(7);
+    const maps: SeedMapRange[][] = Array(7);
     for (let i = 0; i < 7; ++i) maps[i] = [];
 
     for (let i = 2, j = 0, it = mapsStrs.length; i < it; i += 2, ++j) {
       while (mapsStrs[i] !== '' && i < it) {
-        maps[j].push(mapsStrs[i++].split(' ').map((s) => +s) as SeedMap);
+        maps[j].push(mapsStrs[i++].split(' ').map((s) => +s) as SeedMapRange);
       }
     }
 
@@ -46,34 +48,54 @@ export default Puzzle.new({
     return minBy(seeds, (value) => applyMaps(value, maps));
   },
   hard({ seeds, maps }) {
-    let ranges: Range[] = Array(seeds.length / 2);
+    let values: SeedRange[] = Array(seeds.length / 2);
     for (let i = 0; i < seeds.length; i += 2) {
-      ranges[i / 2] = [seeds[i], seeds[i + 1]];
+      values[i / 2] = [seeds[i], seeds[i + 1]];
     }
 
     for (const map of maps) {
-      const next: Range[] = [];
+      values = ((ranges: SeedRange[]) => {
+        const result: SeedRange[] = [];
 
-      ranges_iterator: for (const [start, size] of ranges) {
-        for (const [destination, source, range] of map) {
-          if (!(start < source + range && source < start + size)) continue;
-          const max = Math.max(start, source);
-          const min = Math.min(start + size, source + range) - max;
+        while (ranges.length > 0) {
+          const range = ranges.pop()!;
 
-          next.push([max - source + destination, min]);
-          if (max > start || max + min < start + size) {
-            ranges.push([start, max - start], [max + min, start + size - max - min]);
-          }
+          const transform = (range: SeedRange): SeedRange => {
+            const [valueStart, valueLength] = range;
+            const valueEnd = valueStart + valueLength;
 
-          continue ranges_iterator;
+            for (const [destinationStart, sourceStart, size] of map) {
+              const sourceEnd = sourceStart + size;
+              if (valueStart >= sourceEnd || sourceStart >= valueEnd) continue;
+
+              const overlapStart = Math.max(valueStart, sourceStart);
+              const overlapEnd = Math.min(valueEnd, sourceEnd);
+              const overlapLength = overlapEnd - overlapStart;
+
+              // check left side for extra overlap
+              if (overlapStart > valueStart) {
+                ranges.push([valueStart, overlapStart - valueStart]);
+              }
+
+              // check right side for extra overlap
+              if (overlapEnd < valueEnd) {
+                ranges.push([overlapEnd, valueEnd - overlapEnd]);
+              }
+
+              const transformedStart = destinationStart + overlapStart - sourceStart;
+              return [transformedStart, overlapLength];
+            }
+
+            return range;
+          };
+
+          result.push(transform(range));
         }
 
-        next.push([start, size]);
-      }
-
-      ranges = next;
+        return result;
+      })(values);
     }
 
-    return Math.min(...ranges.map(([s]) => s));
+    return Math.min(...values.map(([start]) => start));
   },
 });
