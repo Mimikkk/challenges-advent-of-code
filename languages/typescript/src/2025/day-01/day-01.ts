@@ -21,6 +21,7 @@ export default Puzzle.new({
       const sign = direction === Direction.Left ? 1 : -1;
 
       if (rotation % 100 === 0) ++count;
+
       rotation += sign * distance;
     }
 
@@ -33,7 +34,8 @@ export default Puzzle.new({
     for (const [direction, distance] of lines) {
       const sign = direction === Direction.Left ? 1 : -1;
 
-      count += Math.floor((sign * rotation + distance) / 100) - Math.floor(sign * rotation / 100);
+      count += Math.floor((((sign * rotation) % 100 + 100) % 100 + distance) / 100);
+
       rotation += sign * distance;
     }
 
