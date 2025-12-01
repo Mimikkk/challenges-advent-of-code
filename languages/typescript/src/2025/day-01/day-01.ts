@@ -13,30 +13,28 @@ const parse = (line: string): [direction: Direction, distance: number] => {
 
 export default Puzzle.new({
   prepare: (lines) => Str.lines(lines).map(parse),
-  easy: (lines) => {
+  easy(lines) {
     let count = 0;
 
-    let value = 50;
+    let rotation = 50;
     for (const [direction, distance] of lines) {
-      value = (value - (+distance * (direction === Direction.Left ? -1 : 1)) + 100) % 100;
+      const sign = direction === Direction.Left ? 1 : -1;
 
-      if (value === 0) ++count;
+      if (rotation % 100 === 0) ++count;
+      rotation += sign * distance;
     }
 
     return count;
   },
-  hard: (lines) => {
+  hard(lines) {
     let count = 0;
 
-    let start = 50;
+    let rotation = 50;
     for (const [direction, distance] of lines) {
-      const dir = direction === Direction.Left ? -1 : 1;
+      const sign = direction === Direction.Left ? 1 : -1;
 
-      for (let i = 0; i < +distance; ++i) {
-        start = (start + dir + 100) % 100;
-
-        if (start === 0) ++count;
-      }
+      count += Math.floor((sign * rotation + distance) / 100) - Math.floor(sign * rotation / 100);
+      rotation += sign * distance;
     }
 
     return count;
