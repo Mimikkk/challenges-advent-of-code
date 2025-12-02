@@ -7,7 +7,7 @@ interface Race {
   record: number;
 }
 const parseAsRaces = (content: string): Race[] => {
-  const [timesStr, distancesStr] = content.split('\n').map(Str.trim);
+  const [timesStr, distancesStr] = Str.lines(content);
 
   const times = timesStr.split('Time:')[1].trim().split(/\s+/).map(Number);
   const records = distancesStr.split('Distance:')[1].trim().split(/\s+/).map(Number);
@@ -16,7 +16,7 @@ const parseAsRaces = (content: string): Race[] => {
 };
 
 const parseAsRace = (content: string): Race => {
-  const [timesStr, distancesStr] = content.split('\n').map(Str.trim);
+  const [timesStr, distancesStr] = Str.lines(content);
 
   const time = +timesStr.split('Time:')[1].replace(/\s/g, '');
   const record = +distancesStr.split('Distance:')[1].replace(/\s/g, '');
