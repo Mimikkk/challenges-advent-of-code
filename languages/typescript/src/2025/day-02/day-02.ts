@@ -37,18 +37,14 @@ export default Puzzle.new({
       const str = id.toString();
       const len = str.length;
 
-      for (let size = 1, it = Math.floor(len / 2); size <= it; ++size) {
+      outer: for (let size = 1, it = Math.floor(len / 2); size <= it; ++size) {
         if (len % size !== 0) continue;
 
-        let matches = true;
         for (let i = size; i < len; ++i) {
-          if (str[i] !== str[i % size]) {
-            matches = false;
-            break;
-          }
+          if (str[i] !== str[i % size]) continue outer;
         }
 
-        if (matches) return true;
+        return true;
       }
 
       return false;
