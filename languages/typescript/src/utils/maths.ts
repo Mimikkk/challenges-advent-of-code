@@ -8,7 +8,16 @@ export const sumBy = <T>(items: T[], fn: (item: T, index: number) => number): nu
   return sum;
 };
 
+export const productBy = <T>(items: T[], fn: (item: T, index: number) => number): number => {
+  let product = 1;
+  for (let i = 0; i < items.length; ++i) {
+    product *= fn(items[i], i);
+  }
+  return product;
+};
+
 export const sum = (items: number[]): number => sumBy(items, identity);
+export const product = (items: number[]): number => productBy(items, identity);
 
 export const countBy = <T>(items: T[], fn: (item: T, index: number) => unknown): number => {
   let count = 0;
