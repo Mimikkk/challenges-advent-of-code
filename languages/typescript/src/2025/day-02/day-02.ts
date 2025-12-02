@@ -1,58 +1,57 @@
 import { Puzzle } from '../../types/puzzle.ts';
-import { sum } from '../../utils/maths.ts';
 
 type Range = [firstId: number, lastId: number];
 const parseRanges = (line: string): Range[] => line.split(',').map((range) => range.split('-').map(Number)) as Range[];
 
-const sumInvalidIds = (ranges: Range[], isValid: (id: number) => boolean): number => {
-  const invalidIds: number[] = [];
+const sumRangesBy = (ranges: Range[], predicate: (id: number) => boolean): number => {
+  let result = 0;
 
   for (const [firstId, lastId] of ranges) {
     for (let id = firstId; id <= lastId; ++id) {
-      if (isValid(id)) continue;
-      invalidIds.push(id);
+      if (!predicate(id)) continue;
+      result += id;
     }
   }
 
-  return sum(invalidIds);
+  return result;
 };
 
 export default Puzzle.new({
   prepare: parseRanges,
   easy(ranges) {
-    return sumInvalidIds(ranges, (id) => {
+    return sumRangesBy(ranges, (id) => {
       const str = id.toString();
       const len = str.length;
-      if (len % 2 !== 0) return true;
+      if (len % 2 !== 0) return false;
 
-      const mid = len / 2;
-      for (let i = 0; i < mid; ++i) {
-        if (str[i] !== str[mid + i]) {
-          return true;
-        }
+      for (let i = 0, it = len / 2; i < it; ++i) {
+        if (str[i] === str[it + i]) continue;
+        return false;
       }
 
-      return false;
+      return true;
     });
   },
   hard(ranges) {
-    return sumInvalidIds(ranges, (id) => {
+    return sumRangesBy(ranges, (id) => {
       const str = id.toString();
       const len = str.length;
 
-      for (let size = 1; size <= Math.floor(len / 2); ++size) {
+      for (let size = 1, it = Math.floor(len / 2); size <= it; ++size) {
         if (len % size !== 0) continue;
 
-        const pattern = str.slice(0, size);
-
-        let repeated = '';
-        for (let i = 0; i < len / size; ++i) {
-          repeated += pattern;
+        let matches = true;
+        for (let i = size; i < len; ++i) {
+          if (str[i] !== str[i % size]) {
+            matches = false;
+            break;
+          }
         }
 
-        if (repeated === str) return false;
+        if (matches) return true;
       }
-      return true;
+
+      return false;
     });
   },
 });
