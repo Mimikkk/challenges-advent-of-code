@@ -1,23 +1,24 @@
 import { Puzzle } from '../../types/puzzle.ts';
 import { Str } from '../../utils/strs.ts';
 
-enum Direction {
+const enum Direction {
   Left = 'L',
   Right = 'R',
 }
 
-const parse = (line: string): [direction: Direction, distance: number] => {
+type Turn = [direction: Direction, distance: number];
+const parseTurns = (line: string): Turn => {
   const [_, direction, distance] = line.match(/^([LR])(\d+)$/)!;
   return [direction as Direction, +distance];
 };
 
 export default Puzzle.new({
-  prepare: (lines) => Str.lines(lines).map(parse),
-  easy(lines) {
+  prepare: (lines) => Str.lines(lines).map(parseTurns),
+  easy(turns) {
     let count = 0;
 
     let rotation = 50;
-    for (const [direction, distance] of lines) {
+    for (const [direction, distance] of turns) {
       const sign = direction === Direction.Left ? 1 : -1;
 
       if (rotation % 100 === 0) ++count;
