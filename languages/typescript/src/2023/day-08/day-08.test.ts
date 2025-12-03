@@ -1,7 +1,10 @@
-
-import { createPuzzleTest } from "../../utils/create-puzzle-test.ts";
-import puzzle from "./day-08.ts";
+import { createPuzzleTest } from '../../utils/create-puzzle-test.ts';
+import puzzle from './day-08.ts';
 
 createPuzzleTest({
   puzzle,
+  easyTest: 6,
+  // easyUser: 14429,
+  // hardTest: 6,
+  // hardUser: 10921547990923,
 });
