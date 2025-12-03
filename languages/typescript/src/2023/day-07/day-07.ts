@@ -1,4 +1,5 @@
 import { Puzzle } from '../../types/puzzle.ts';
+import { identity, sumBy } from '../../utils/maths.ts';
 import { Str } from '../../utils/strs.ts';
 
 const enum CardType {
@@ -47,7 +48,7 @@ const enum HandType {
   HighCard = 'high-card',
 }
 
-const handRanks = [
+const typeRanks = [
   HandType.FiveOfAKind,
   HandType.FourOfAKind,
   HandType.FullHouse,
@@ -57,43 +58,74 @@ const handRanks = [
   HandType.HighCard,
 ] as const;
 
-const evaluateHandType = (hand: CardHand, useJokers = false): HandType => {
-  const countMap = new Map<CardType, number>();
-  let wildcardCount = 0;
+const cardRankMap = new Map(cardRanks.map((card, i) => [card, i]));
+const rankCard = (card: CardType): number => cardRankMap.get(card) ?? 0;
+const typeRankMap = new Map(typeRanks.map((hand, i) => [hand, i]));
+const rankType = (type: HandType): number => typeRankMap.get(type) ?? 0;
 
-  for (const card of hand) {
-    if (useJokers && card === CardType.Joker) {
-      ++wildcardCount;
-    } else {
-      countMap.set(card, (countMap.get(card) ?? 0) + 1);
-    }
-  }
-
-  const counts = Array.from(countMap.values()).sort((a, b) => b - a);
-  if (wildcardCount === 5) return HandType.FiveOfAKind;
-  if (wildcardCount > 0 && counts.length > 0) counts[0] += wildcardCount;
-
-  if (counts[0] === 5) return HandType.FiveOfAKind;
-  if (counts[0] === 4) return HandType.FourOfAKind;
-  if (counts[0] === 3 && counts[1] === 2) return HandType.FullHouse;
-  if (counts[0] === 3) return HandType.ThreeOfAKind;
-  if (counts[0] === 2 && counts[1] === 2) return HandType.TwoPair;
-  if (counts[0] === 2) return HandType.OnePair;
-
+const evaluateHandType = (counts: number[]): HandType => {
+  const [first, second] = counts;
+  if (first === 5) return HandType.FiveOfAKind;
+  if (first === 4) return HandType.FourOfAKind;
+  if (first === 3 && second === 2) return HandType.FullHouse;
+  if (first === 3) return HandType.ThreeOfAKind;
+  if (first === 2 && second === 2) return HandType.TwoPair;
+  if (first === 2) return HandType.OnePair;
   return HandType.HighCard;
 };
 
-const compareHands = (first: CardHand, second: CardHand, useJokers = false): number => {
-  const firstType = evaluateHandType(first, useJokers);
-  const secondType = evaluateHandType(second, useJokers);
+interface HandComparisonStrategy {
+  evaluate(hand: CardHand): HandType;
+  transform(hand: CardHand): CardHand;
+}
+
+const regularStrategy: HandComparisonStrategy = {
+  evaluate(hand) {
+    const countMap = new Map<CardType, number>();
+    for (const card of hand) {
+      countMap.set(card, (countMap.get(card) ?? 0) + 1);
+    }
+
+    const counts = Array.from(countMap.values()).sort((a, b) => b - a);
+    return evaluateHandType(counts);
+  },
+  transform: identity,
+};
+
+const wildcardStrategy: HandComparisonStrategy = {
+  evaluate(hand) {
+    const countMap = new Map<CardType, number>();
+    let wildcardCount = 0;
+
+    for (const card of hand) {
+      if (card === CardType.Joker) {
+        ++wildcardCount;
+      } else {
+        countMap.set(card, (countMap.get(card) ?? 0) + 1);
+      }
+    }
+
+    const counts = Array.from(countMap.values()).sort((a, b) => b - a);
+
+    if (wildcardCount === 5) return HandType.FiveOfAKind;
+    if (wildcardCount > 0 && counts.length > 0) counts[0] += wildcardCount;
+
+    return evaluateHandType(counts);
+  },
+  transform: (hand) => hand.map((card) => (card === CardType.J ? CardType.Joker : card)) as CardHand,
+};
+
+const compareHands = (first: CardHand, second: CardHand, strategy: HandComparisonStrategy): number => {
+  const firstType = strategy.evaluate(first);
+  const secondType = strategy.evaluate(second);
 
   if (firstType !== secondType) {
-    return handRanks.indexOf(firstType) - handRanks.indexOf(secondType);
+    return rankType(firstType) - rankType(secondType);
   }
 
   for (let i = 0; i < first.length; ++i) {
     if (first[i] === second[i]) continue;
-    return cardRanks.indexOf(first[i]) - cardRanks.indexOf(second[i]);
+    return rankCard(first[i]) - rankCard(second[i]);
   }
 
   return 0;
@@ -104,40 +136,24 @@ interface HandBid {
   bid: number;
 }
 
-const parseHandBids = (content: string): HandBid[] =>
-  Str.lines(content).map((line) => {
-    const [handStr, bidStr] = line.split(' ');
-
-    return {
-      hand: handStr.split('') as CardHand,
-      bid: +bidStr,
-    };
-  });
-
-const scoreBids = (bids: HandBid[]): number => {
-  let result = 0;
-  for (let i = 0; i < bids.length; ++i) {
-    const { bid } = bids[i];
-    result += bid * (i + 1);
-  }
-  return result;
-};
+const solve = (bids: HandBid[], strategy: HandComparisonStrategy): number =>
+  sumBy(
+    bids.map(({ hand, bid }) => ({ hand: strategy.transform(hand), bid })).sort((a, b) =>
+      compareHands(b.hand, a.hand, strategy)
+    ),
+    ({ bid }, index) => bid * (index + 1),
+  );
 
 export default Puzzle.new({
-  prepare: parseHandBids,
-  easy(bids) {
-    bids.sort((a, b) => compareHands(b.hand, a.hand));
+  prepare: (content): HandBid[] =>
+    Str.lines(content).map((line) => {
+      const [handStr, bidStr] = line.split(' ');
 
-    return scoreBids(bids);
-  },
-  hard(bids) {
-    const jokerBids = bids.map(({ hand, bid }) => ({
-      hand: hand.map((card) => card === CardType.J ? CardType.Joker : card) as CardHand,
-      bid,
-    }));
-
-    jokerBids.sort((a, b) => compareHands(b.hand, a.hand, true));
-
-    return scoreBids(jokerBids);
-  },
+      return {
+        hand: handStr.split('') as CardHand,
+        bid: +bidStr,
+      };
+    }),
+  easy: (bids) => solve(bids, regularStrategy),
+  hard: (bids) => solve(bids, wildcardStrategy),
 });
