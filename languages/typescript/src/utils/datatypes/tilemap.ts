@@ -60,7 +60,7 @@ export class TileMap<T extends string> {
     }
   }
 
-  filter(predicate: ((tile: T) => boolean) | T): Vec2[] {
+  filter(predicate: ((tile: T, x: number, y: number) => boolean) | T): Vec2[] {
     const { n, m, grid } = this;
     const isValid = typeof predicate === 'function' ? predicate : (tile: T) => tile === predicate;
 
@@ -68,12 +68,28 @@ export class TileMap<T extends string> {
     for (let i = 0; i < n; ++i) {
       const row = grid[i];
       for (let j = 0; j < m; ++j) {
-        if (!isValid(row[j])) continue;
+        if (!isValid(row[j], i, j)) continue;
         result.push(Vec2.new(i, j));
       }
     }
 
     return result;
+  }
+
+  count(predicate: ((tile: T, x: number, y: number) => boolean) | T): number {
+    const { n, m, grid } = this;
+    const isValid = typeof predicate === 'function' ? predicate : (tile: T) => tile === predicate;
+
+    let total = 0;
+    for (let i = 0; i < n; ++i) {
+      const row = grid[i];
+      for (let j = 0; j < m; ++j) {
+        if (!isValid(row[j], i, j)) continue;
+        total += 1;
+      }
+    }
+
+    return total;
   }
 }
 
