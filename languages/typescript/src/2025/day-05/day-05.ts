@@ -14,10 +14,10 @@ export default Puzzle.new({
     return availableIds.filter((id) => freshRanges.some(([start, end]) => id >= start && id <= end)).length;
   },
   hard({ freshRanges }) {
-    const sortedRanges = freshRanges.slice().sort(([aStart], [bStart]) => aStart - bStart);
+    const sorted = freshRanges.sort(([a], [b]) => a - b);
     const merged: [number, number][] = [];
 
-    for (const [start, end] of sortedRanges) {
+    for (const [start, end] of sorted) {
       if (merged.length === 0 || merged[merged.length - 1][1] < start - 1) {
         merged.push([start, end]);
       } else {
