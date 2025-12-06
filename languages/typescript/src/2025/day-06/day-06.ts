@@ -1,5 +1,5 @@
 import { Puzzle } from '../../types/puzzle.ts';
-import { sumBy } from '../../utils/maths.ts';
+import { product, sum, sumBy } from '../../utils/maths.ts';
 import { Str } from '../../utils/strs.ts';
 
 enum Operator {
@@ -9,67 +9,53 @@ enum Operator {
 
 export default Puzzle.new({
   easy(content) {
-    const lines = Str.lines(content).map((line) => line.trim().split(/\s+/gi));
-    const [operators] = lines.splice(lines.length - 1, 1) as [Operator[]];
+    const lines = Str.lines(content).map((line) => line.trim().split(/\s+/));
 
-    const numbers = lines.map((line) => line.map((num) => +num));
+    const operators = lines.pop() ?? [];
+    const numbers = lines.map((line) => line.map(Number));
 
-    return sumBy(operators, (operator, index) => {
-      let result = operator === Operator.Add ? 0 : 1;
-      for (let i = 0; i < numbers.length; ++i) {
-        const number = numbers[i][index];
-
-        if (operator === Operator.Add) {
-          result += number;
-        } else {
-          result *= number;
-        }
-      }
-
-      return result;
-    });
+    return sumBy(
+      operators.map((operator, i) => ({
+        method: operator === Operator.Add ? sum : product,
+        values: numbers.map((values) => values[i]),
+      })),
+      ({ method, values }) => method(values),
+    );
   },
   hard(content) {
     const lines = Str.lines(content);
-    const [operatorsStr] = lines.splice(lines.length - 1, 1);
-    const numbersStrs = lines.map((line) => line);
-    const n = numbersStrs.length;
-    const m = numbersStrs[0].length;
+    const operators = lines.pop()?.trim().split(/\s+/) ?? [];
 
-    const numbers: number[][] = [[]];
-    for (let j = 0; j < m; ++j) {
-      const numberCharacters = [];
+    const m = lines[0]?.length ?? 0;
 
-      for (let i = 0; i < n; ++i) {
-        const character = numbersStrs[i][j];
-        if (character === ' ') continue;
+    const operatorsNumbers: number[][] = [];
+    let operatorNumbers: number[] = [];
 
-        numberCharacters.push(character);
-      }
-      const value = +numberCharacters.join('');
+    for (let y = 0; y < m; ++y) {
+      const columnDigits = lines
+        .map((line) => line[y])
+        .filter((char) => char !== ' ')
+        .join('');
+
+      const value = Number(columnDigits);
       if (value === 0) {
-        numbers.push([]);
-        continue;
-      }
-
-      numbers.at(-1)?.push(value);
-    }
-
-    const operators = operatorsStr.trim().split(/\s+/).map((character) => character as Operator);
-
-    return sumBy(operators, (operator, index) => {
-      let result = operator === Operator.Add ? 0 : 1;
-      for (let i = 0; i < numbers[index].length; ++i) {
-        const number = numbers[index][i];
-
-        if (operator === Operator.Add) {
-          result += number;
-        } else {
-          result *= number;
+        if (operatorNumbers.length) {
+          operatorsNumbers.push(operatorNumbers);
+          operatorNumbers = [];
         }
+      } else if (columnDigits) {
+        operatorNumbers.push(value);
       }
+    }
+    if (operatorNumbers.length) operatorsNumbers.push(operatorNumbers);
 
-      return result;
-    });
+    return sumBy(
+      operators
+        .map((operator, i) => ({
+          method: operator === Operator.Add ? sum : product,
+          values: operatorsNumbers[i],
+        })),
+      ({ method, values }) => method(values),
+    );
   },
 });
