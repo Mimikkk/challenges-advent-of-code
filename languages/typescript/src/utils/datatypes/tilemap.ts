@@ -27,26 +27,42 @@ export class TileMap<T extends string> {
     return this;
   }
 
-  inBounds(x: number, y: number): boolean {
-    return x >= 0 && x < this.n && y >= 0 && y < this.m;
+  inBounds(position: Vec2): boolean;
+  inBounds(x: number, y: number): boolean;
+  inBounds(x: number | Vec2, y?: number): boolean {
+    if (typeof x === 'object') return this.inBounds(x.x, x.y!);
+    return x >= 0 && x < this.n && y! >= 0 && y! < this.m;
   }
 
-  id(x: number, y: number): number {
-    return Ids.xyi32(x, y);
+  id(position: Vec2): number;
+  id(x: number, y: number): number;
+  id(x: number | Vec2, y?: number): number {
+    if (typeof x === 'object') return Ids.v2i32(x);
+    return Ids.xyi32(x, y!);
   }
 
-  is(x: number, y: number, predicate: ((tile: T) => boolean) | T): boolean {
-    const tile = this.at(x, y);
+  is(position: Vec2, predicate: ((tile: T) => boolean) | T): boolean;
+  is(x: number, y: number, predicate: ((tile: T) => boolean) | T): boolean;
+  is(x: number | Vec2, y?: number | ((tile: T) => boolean) | T, predicate?: ((tile: T) => boolean) | T): boolean {
+    if (typeof x === 'object') return this.is(x.x, x.y!, y as ((tile: T) => boolean) | T);
+
+    const tile = this.at(x, y as number);
     if (tile === undefined) return false;
     return typeof predicate === 'function' ? predicate(tile) : tile === predicate;
   }
 
-  at(x: number, y: number): T | undefined {
-    return this.inBounds(x, y) ? this.grid[x][y] : undefined;
+  at(position: Vec2): T | undefined;
+  at(x: number, y: number): T | undefined;
+  at(x: number | Vec2, y?: number): T | undefined {
+    if (typeof x === 'object') return this.at(x.x, x.y!);
+    return this.inBounds(x, y!) ? this.grid[x][y!] : undefined;
   }
 
-  set(x: number, y: number, tile: T): void {
-    this.grid[x][y] = tile;
+  set(position: Vec2, tile: T): void;
+  set(x: number, y: number, tile: T): void;
+  set(x: number | Vec2, y?: number | T, tile?: T): void {
+    if (typeof x === 'object') return this.set(x.x, x.y!, tile!);
+    this.grid[x!][y! as number] = tile!;
   }
 
   find(tile: T): Vec2 | undefined {
