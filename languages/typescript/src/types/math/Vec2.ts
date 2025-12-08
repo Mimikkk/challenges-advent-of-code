@@ -147,6 +147,14 @@ export class Vec2 {
     return this.set(Math.min(this.x, x), Math.min(this.y, y));
   }
 
+  static euclidean(first: Const<self>, second: Const<self>): number {
+    return first.euclidean(second);
+  }
+
+  euclidean({ x, y }: Const<self>): number {
+    return Math.sqrt((this.x - x) * (this.x - x) + (this.y - y) * (this.y - y));
+  }
+
   static manhattan(first: Const<self>, second: Const<self>): number {
     return first.manhattan(second);
   }
@@ -179,6 +187,10 @@ export class Vec2 {
     into[offset + 0] = this.x;
     into[offset + 1] = this.y;
     return into;
+  }
+
+  toString(): string {
+    return `Vec2 { x: ${this.x}, y: ${this.y} }`;
   }
 }
 
