@@ -1,8 +1,7 @@
-import { colors } from '@cliffy/ansi/colors';
 import { Neighbours } from '../../types/grids/grids.ts';
+import { Vec2 } from '../../types/math/Vec2.ts';
 import { Puzzle } from '../../types/puzzle.ts';
 import { Str } from '../../utils/strs.ts';
-import { GridVisualizer } from '../../visualizers/grid.ts';
 
 /*
 --- Day 9: Movie Theater ---
@@ -163,18 +162,34 @@ Using two red tiles as opposite corners, what is the largest area of any rectang
 
 */
 
-const isInsidePoylgon = ([x, y]: [number, number], polygon: [number, number][]): boolean => {
-  let result = false;
+const isInsidePolygon = ([x, y]: [number, number], polygon: [number, number][]): boolean => {
+  let inside = false;
 
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const [x1, y1] = polygon[i];
-    const [x2, y2] = polygon[j];
+    const [x1, y1] = polygon[j];
+    const [x2, y2] = polygon[i];
 
-    const intersects = (y1 > y) !== (y2 > y) && (x < ((x2 - x1) * (y - y1)) / (y2 - y1) + x1);
-    if (intersects) result = !result;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+
+    if (dx !== 0 || dy !== 0) {
+      // if ((x - x1) * dy - (y - y1) * dx === 0) {
+      const minX = Math.min(x1, x2);
+      const maxX = Math.max(x1, x2);
+      const minY = Math.min(y1, y2);
+      const maxY = Math.max(y1, y2);
+      if ((x - x1) * dy - (y - y1) * dx === 0 && x >= minX && x <= maxX && y >= minY && y <= maxY) {
+        return true;
+      }
+    }
+
+    if ((y1 > y) !== (y2 > y)) {
+      const atX = ((x2 - x1) * (y - y1)) / (y2 - y1) + x1;
+      if (x < atX) inside = !inside;
+    }
   }
 
-  return result;
+  return inside;
 };
 
 export default Puzzle.new({
@@ -227,39 +242,97 @@ export default Puzzle.new({
 
       return result;
     };
-    const betweens = findBetweens();
 
-    const v = GridVisualizer.fromBounds(13, 9);
-    v.fill(colors.gray('.'));
-    v.add(corners.map(([x, y]) => [x, y, colors.red('R')] as const));
-    v.add(betweens.map(([x, y]) => [x, y, colors.gray('X')] as const));
+    // const v = GridVisualizer.fromBounds(15, 15);
+    // v.fill(colors.gray('.'));
+    // v.add(corners.map(([x, y]) => [x, y, colors.gray('R')] as const));
+    // v.add(betweens.map(([x, y]) => [x, y, colors.gray('X')] as const));
 
-    const cornerDiagonals = corners.flatMap(([x, y]) =>
-      Neighbours.diagonals.map(({ x: dx, y: dy }) => [x + dx, y + dy] as [number, number])
-    );
+    const directions = corners.map((
+      [x, y],
+      index,
+    ): [start: Vec2, index: number, directions: Vec2[]] => [
+      Vec2.new(x, y),
+      index,
+      Neighbours.diagonals.filter(({ x: dx, y: dy }) => isInsidePolygon([x + dx, y + dy], corners)),
+    ]);
 
-    const insideCornerDiagonals = cornerDiagonals.filter((vertex) => isInsidePoylgon(vertex, corners));
+    let vi = 0;
+    let vj = 0;
 
-    v.add(insideCornerDiagonals.map(([x, y]) => [x, y, colors.yellow('I')] as const));
-    v.log();
+    const candidates: [start: Vec2, index: number, corners: Vec2[]][] = [];
+    for (const [start, index, directionals] of directions) {
+      const cornersToCheck: Vec2[] = [];
+      // console.log(start, index, directionals);
 
+      for (const direction of directionals) {
+        const value = Vec2.from(start);
+
+        while (true) {
+          value.add(direction);
+          if (!isInsidePolygon(value.toArray() as [number, number], corners)) break;
+          if (vi === index) {
+            // v.add(value.x, value.y);
+          }
+          outer: for (const [x, y] of corners) {
+            // bound by x and y of the start
+            if (value.x !== x && value.y !== y) {
+              continue;
+            }
+
+            // bound by x and y of the corner
+            if (start.x === x || start.y === y) {
+              continue;
+            }
+
+            // check if formed edge is on the polygon
+            // if (vi === index && x === 9 && y === 7) {
+            const directionX = Math.sign(x - start.x);
+            const directionY = Math.sign(y - start.y);
+
+            for (let xx = start.x + directionX; xx !== x; xx += directionX) {
+              // v.add(xx, start.y, colors.green('H'));
+              if (!isInsidePolygon([xx, start.y], corners)) {
+                // v.add(xx, start.y, colors.red('H'));
+                continue outer;
+              }
+            }
+
+            for (let yy = start.y + directionY; yy !== y; yy += directionY) {
+              // v.add(start.x, yy, colors.green('V'));
+              if (!isInsidePolygon([start.x, yy], corners)) {
+                // v.add(start.x, yy, colors.red('V'));
+                continue outer;
+              }
+            }
+
+            // console.log(x, y, start.x, start.y);
+            // v.add(x, y, colors.green('O'));
+            // v.add(start.x, start.y, colors.blue('O'));
+            // }
+
+            cornersToCheck.push(Vec2.new(x, y));
+          }
+        }
+      }
+      if (cornersToCheck.length < 1) continue;
+      candidates.push([start, index, cornersToCheck]);
+    }
+
+    // {
+    //   const [start, index, corners] = candidates[7];
+    //   console.log(start, index, corners);
+    //   v.log();
+    //   v.fill();
+    //   v.add([start.x, start.y, colors.red('R')]);
+    //   for (const corner of corners) {
+    //     v.add([corner.x, corner.y, colors.yellow('X')]);
+    //   }
+    //   v.log();
+    // }
     let result = 0;
 
-    // for (let i = 0; i < n; ++i) {
-    //   for (let j = i + 1; j < n; ++j) {
-    //     const [x1, y1] = corners[i];
-    //     const [x2, y2] = corners[j];
-    //     if (x1 === x2 && y1 === y2) continue;
-
-    //     const minX = Math.min(x1, x2);
-    //     const maxX = Math.max(x1, x2);
-    //     const minY = Math.min(y1, y2);
-    //     const maxY = Math.max(y1, y2);
-
-    //     const area = (maxX - minX + 1) * (maxY - minY + 1);
-    //     if (area > result) result = area;
-    //   }
-    // }
+    console.log(candidates.length);
 
     return result;
   },

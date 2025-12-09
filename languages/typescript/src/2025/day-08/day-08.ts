@@ -13,7 +13,7 @@ const solution = (positions: Vec3[], steps: number): number => {
 
   for (let i = 0; i < n; ++i) {
     for (let j = i + 1; j < n; ++j) {
-      edges.push({ from: i, to: j, distance: Vec3.euclidean(positions[i], positions[j]) });
+      edges.push({ from: i, to: j, distance: Vec3.euclideanSquared(positions[i], positions[j]) });
     }
   }
 
