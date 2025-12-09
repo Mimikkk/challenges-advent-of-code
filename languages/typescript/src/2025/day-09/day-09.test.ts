@@ -3,8 +3,8 @@ import puzzle from './day-09.ts';
 
 createPuzzleTest({
   puzzle,
-  // easyTest: 50,
-  // easyUser: 4748826374,
+  easyTest: 50,
+  easyUser: 4748826374,
   hardTest: 24,
-  // hardUser: 2611056932,
+  hardUser: 1554370486,
 });
