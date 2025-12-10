@@ -56,6 +56,7 @@
     "@std/testing": "jsr:@std/testing",
     "@std/expect": "jsr:@std/expect",
     "@std/assert": "jsr:@std/assert",
-    "@cursorgoto": "https://denopkg.com/iamnathanj/cursor@v2.2.0/mod.ts"
+    "@cursorgoto": "https://denopkg.com/iamnathanj/cursor@v2.2.0/mod.ts",
+    "lpsolver": "npm:lpsolver@^1.0.2"
   }
 }
