@@ -4,16 +4,13 @@ import { memoize } from '../../utils/memoize.ts';
 import { Str } from '../../utils/strs.ts';
 
 export default Puzzle.new({
-  prepare: (input: string) => {
-    const lines = Str.lines(input);
-    const graph = new Map<string, string[]>();
-    for (const line of lines) {
-      if (!line.trim()) continue;
-      const [from, toStr] = line.split(':');
-      graph.set(from.trim(), toStr.trim().split(/\s+/));
-    }
-    return graph;
-  },
+  prepare: (input: string) =>
+    new Map<string, string[]>(
+      Str.lines(input).map((line) => {
+        const [from, toStr] = line.split(':');
+        return [from, toStr.split(' ')];
+      }),
+    ),
   easy(graph) {
     const stack: string[] = ['you'];
 
