@@ -1,4 +1,5 @@
 import { Puzzle } from '../../types/puzzle.ts';
+import { sumBy } from '../../utils/maths.ts';
 import { memoize } from '../../utils/memoize.ts';
 import { Str } from '../../utils/strs.ts';
 
@@ -14,11 +15,11 @@ export default Puzzle.new({
     return graph;
   },
   easy(graph) {
-    const stack: [string, string[]][] = [['you', []]];
+    const stack: string[] = ['you'];
 
     let count = 0;
     while (stack.length) {
-      const [current, path] = stack.pop()!;
+      const current = stack.pop()!;
 
       if (current === 'out') {
         ++count;
@@ -26,11 +27,7 @@ export default Puzzle.new({
       }
 
       const nexts = graph.get(current);
-      if (!nexts) continue;
-
-      for (const next of nexts) {
-        stack.push([next, [...path, next]]);
-      }
+      if (nexts) stack.push(...nexts);
     }
 
     return count;
@@ -43,15 +40,7 @@ export default Puzzle.new({
 
       const nexts = graph.get(current);
       if (!nexts) return 0;
-
-      let result = 0;
-
-      for (let i = 0; i < nexts.length; ++i) {
-        const next = nexts[i];
-        result += countPaths(next, hasDac || next === 'dac', hasFft || next === 'fft');
-      }
-
-      return result;
+      return sumBy(nexts, (next) => countPaths(next, hasDac || next === 'dac', hasFft || next === 'fft'));
     });
 
     return countPaths('svr', false, false);
