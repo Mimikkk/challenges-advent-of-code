@@ -29,6 +29,14 @@ export const countBy = <T>(items: T[], fn: (item: T, index: number) => unknown):
 
 export const count = (items: number[]): number => countBy(items, identity);
 
+export const maxBy = <T>(items: T[], fn: (item: T, index: number) => number): number => {
+  let max = -Infinity;
+  for (let i = 0; i < items.length; ++i) {
+    const value = fn(items[i], i);
+    if (value > max) max = value;
+  }
+  return max;
+};
 export const minBy = <T>(items: T[], fn: (item: T, index: number) => number): number => {
   let min = Infinity;
   for (let i = 0; i < items.length; ++i) {
@@ -37,3 +45,6 @@ export const minBy = <T>(items: T[], fn: (item: T, index: number) => number): nu
   }
   return min;
 };
+
+export const desc = (a: number, b: number): number => b - a;
+export const asc = (a: number, b: number): number => a - b;

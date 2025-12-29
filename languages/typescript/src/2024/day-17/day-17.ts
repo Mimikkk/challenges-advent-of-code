@@ -108,7 +108,6 @@ const parseInput = (content: string): PuzzleInput => {
 };
 
 const runProgram = (input: PuzzleInput) => {
-  // console.log(input);
   let index = 0;
   const { program } = input;
   let { registerA, registerB, registerC } = input;

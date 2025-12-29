@@ -93,7 +93,6 @@ const parseNodes = (content: string) => {
     leftMap.set(node, left);
     rightMap.set(node, right);
   }
-
   console.log(leftMap, rightMap);
 
   return { instructions, leftMap, rightMap };
