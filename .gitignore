@@ -5,3 +5,4 @@
 **/.deno
 **/vendor
 **/.env
+languages/rust/target
