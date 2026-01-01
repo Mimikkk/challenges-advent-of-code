@@ -4,8 +4,7 @@ import puzzle from './day-12.ts';
 createPuzzleTest({
   puzzle,
   easyTest: 31,
-  easyUser: 2060,
+  easyUser: 520,
   hardTest: 29,
   hardUser: 508,
-  skip: true,
 });

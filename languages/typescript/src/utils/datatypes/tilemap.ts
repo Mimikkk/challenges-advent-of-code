@@ -1,16 +1,16 @@
 import { Ids } from '../../types/math/Ids.ts';
 import { Vec2 } from '../../types/math/Vec2.ts';
 
-export class TileMap<T extends string> {
-  static new<T extends string>(grid: T[][] = [], n: number = 0, m: number = 0): self<T> {
+export class TileMap<T> {
+  static new<T>(grid: T[][] = [], n: number = 0, m: number = 0): self<T> {
     return new Self(grid, n, m);
   }
 
-  static from<T extends string>(tilemap: self<T>, into: self<T> = Self.new()): self<T> {
+  static from<T>(tilemap: self<T>, into: self<T> = Self.new()): self<T> {
     return into.from(tilemap);
   }
 
-  static fromGrid<T extends string>(grid: T[][]): self<T> {
+  static fromGrid<T>(grid: T[][]): self<T> {
     return new Self(grid, grid.length, grid[0]?.length ?? 0);
   }
 
@@ -48,7 +48,7 @@ export class TileMap<T extends string> {
 
     const tile = this.at(x, y as number);
     if (tile === undefined) return false;
-    return typeof predicate === 'function' ? predicate(tile) : tile === predicate;
+    return predicate instanceof Function ? predicate(tile) : tile === predicate;
   }
 
   at(position: Vec2): T | undefined;
@@ -76,9 +76,13 @@ export class TileMap<T extends string> {
     }
   }
 
+  map<U>(callback: (tile: T, x: number, y: number) => U): self<U> {
+    return TileMap.fromGrid(this.grid.map((row, i) => row.map((tile, j) => callback(tile, i, j))));
+  }
+
   filter(predicate: ((tile: T, x: number, y: number) => boolean) | T): Vec2[] {
     const { n, m, grid } = this;
-    const isValid = typeof predicate === 'function' ? predicate : (tile: T) => tile === predicate;
+    const isValid = predicate instanceof Function ? predicate : (tile: T) => tile === predicate;
 
     const result: Vec2[] = [];
     for (let i = 0; i < n; ++i) {
@@ -94,7 +98,7 @@ export class TileMap<T extends string> {
 
   count(predicate: ((tile: T, x: number, y: number) => boolean) | T): number {
     const { n, m, grid } = this;
-    const isValid = typeof predicate === 'function' ? predicate : (tile: T) => tile === predicate;
+    const isValid = predicate instanceof Function ? predicate : (tile: T) => tile === predicate;
 
     let total = 0;
     for (let i = 0; i < n; ++i) {
@@ -109,5 +113,5 @@ export class TileMap<T extends string> {
   }
 }
 
-type self<T extends string> = TileMap<T>;
+type self<T> = TileMap<T>;
 const Self = TileMap;
