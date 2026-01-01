@@ -5,11 +5,6 @@ import { Puzzle } from '../../types/puzzle.ts';
 import { TileMap } from '../../utils/datatypes/tilemap.ts';
 import { Str } from '../../utils/strs.ts';
 
-enum Tile {
-  Start = 'S',
-  End = 'E',
-}
-
 interface Input {
   heights: TileMap<number>;
   start: Vec2;
