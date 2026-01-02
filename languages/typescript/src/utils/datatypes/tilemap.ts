@@ -14,6 +14,15 @@ export class TileMap<T> {
     return new Self(grid, grid.length, grid[0]?.length ?? 0);
   }
 
+  static fromBounds<T>(minX: number, minY: number, maxX: number, maxY: number): self<T> {
+    return Self.fromGrid(
+      Array.from(
+        { length: maxY - minY + 1 },
+        () => Array.from({ length: maxX - minX + 1 }, () => undefined as T),
+      ),
+    );
+  }
+
   private constructor(public grid: T[][], public n: number, public m: number) {}
 
   from({ grid }: self<T>): this {
