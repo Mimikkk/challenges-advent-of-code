@@ -48,3 +48,5 @@ export const minBy = <T>(items: T[], fn: (item: T, index: number) => number): nu
 
 export const desc = (a: number, b: number): number => b - a;
 export const asc = (a: number, b: number): number => a - b;
+
+export const zip = <T, U>(items1: T[], items2: U[]): [T, U][] => items1.map((item1, index) => [item1, items2[index]]);

@@ -1,57 +1,122 @@
 import { Puzzle } from '../../types/puzzle.ts';
 import { Str } from '../../utils/strs.ts';
 
-// clanker:opt
-// You are given a network of valves connected by tunnels.
-// Each valve X has a flow rate (possibly zero), is initially closed, and a list of adjacent valves.
-// Starting at AA, you have 30 minutes.
-// Each minute, you can move to an adjacent valve or open the current valve (if closed).
-// Opening a valve adds its flow rate to the total pressure released every subsequent minute.
-// Goal: Find the path of movements and valve openings that maximizes total released pressure in 30 minutes.
-// Input: Each line describes valve name, flow rate, and its connected valves.
-//
-// Example input:
-// Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
-// Valve BB has flow rate=13; tunnels lead to valves CC, AA
-// Valve CC has flow rate=2; tunnels lead to valves DD, BB
-// Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
-// Valve EE has flow rate=3; tunnels lead to valves FF, DD
-// Valve FF has flow rate=0; tunnels lead to valves EE, GG
-// Valve GG has flow rate=0; tunnels lead to valves FF, HH
-// Valve HH has flow rate=22; tunnel leads to valve GG
-// Valve II has flow rate=0; tunnels lead to valves AA, JJ
-// Valve JJ has flow rate=21; tunnel leads to valve II
-
-const TimeSteps = 30;
-
 interface Valve {
   rate: number;
-  connections: Valve[];
+  connections: string[];
+}
+type ValveMap = Map<string, Valve>;
+
+function computeDistances(valves: ValveMap): Map<string, Map<string, number>> {
+  const result = new Map<string, Map<string, number>>();
+
+  for (const valve of valves.keys()) {
+    const queue: [string, number][] = [[valve, 0]];
+
+    const visited = new Set<string>([valve]);
+    const distances = new Map<string, number>();
+
+    while (queue.length) {
+      const [node, distance] = queue.shift()!;
+      distances.set(node, distance);
+
+      for (const neighbor of valves.get(node)!.connections) {
+        if (visited.has(neighbor)) continue;
+
+        visited.add(neighbor);
+        queue.push([neighbor, distance + 1]);
+      }
+    }
+    result.set(valve, distances);
+  }
+
+  return result;
 }
 
 export default Puzzle.new({
   prepare: (content) => {
-    const valves = Str.lines(content).map((line) => {
-      const [_, name, rate, tunnels] = /Valve (\w+) has flow rate=(\d+); tunnels? leads? to valves? ([\w,]+)/.exec(
+    const valvesArr = Str.lines(content).map((line) => {
+      const [_, name, rate, tunnels] = /Valve (\w+) has flow rate=(\d+); tunnels? leads? to valves? ([\w,\s]+)/.exec(
         line,
       )!;
-      return { name, rate: +rate, connections: tunnels.split(',').filter(Boolean) };
+      return { name, rate: +rate, connections: tunnels.split(',').map((s) => s.trim()) };
     });
-
-    const result = new Map<string, Valve>();
-    for (const valve of valves) {
-      result.set(valve.name, { rate: valve.rate, connections: [] });
+    const result: ValveMap = new Map();
+    for (const valve of valvesArr) {
+      result.set(valve.name, { rate: valve.rate, connections: valve.connections });
     }
+    return result;
+  },
 
-    for (const valve of valves) {
-      result.get(valve.name)?.connections.push(...valve.connections.map((connection) => result.get(connection)!));
+  easy: (valves) => {
+    const StepLimit = 30;
+    const candidates = Array.from(valves.entries()).filter(([_, v]) => v.rate > 0).map(([n]) => n);
+    const distanceMap = computeDistances(valves);
+
+    let max = 0;
+    const indices = Object.fromEntries(candidates.map((v, i) => [v, i]));
+
+    const traverse = (activeValve: string, activeStep: number, activeSum: number, openBitSet: number) => {
+      if (activeSum > max) max = activeSum;
+
+      for (const candidate of candidates) {
+        const bit = 1 << indices[candidate];
+        if (openBitSet & bit) continue;
+
+        const distanceSteps = distanceMap.get(activeValve)!.get(candidate)!;
+        const requiredSteps = distanceSteps + 1;
+        const step = activeStep + requiredSteps;
+        if (step > StepLimit) continue;
+
+        const releaseValue = valves.get(candidate)!.rate * (StepLimit - step + 1);
+        traverse(candidate, step, activeSum + releaseValue, openBitSet | bit);
+      }
+    };
+
+    traverse('AA', 1, 0, 0);
+    return max;
+  },
+
+  hard: (valves) => {
+    const StepLimit = 26;
+    const candidates = Array.from(valves.entries())
+      .filter(([_, v]) => v.rate > 0)
+      .map(([n]) => n);
+
+    const n = candidates.length;
+    const distanceMap = computeDistances(valves);
+
+    const maxResultCache = new Map<number, number>();
+    const traverse = (activeValve: string, activeStep: number, activeSum: number, openBitSet: number) => {
+      if ((maxResultCache.get(openBitSet) ?? -1) < activeSum) {
+        maxResultCache.set(openBitSet, activeSum);
+      }
+
+      for (let i = 0; i < n; ++i) {
+        const valve = candidates[i];
+        const bit = 1 << i;
+        if (openBitSet & bit) continue;
+        const step = activeStep + distanceMap.get(activeValve)!.get(valve)! + 1;
+        if (step > StepLimit) continue;
+
+        const releaseValue = valves.get(valve)!.rate * (StepLimit - step + 1);
+        traverse(valve, step, activeSum + releaseValue, openBitSet | bit);
+      }
+    };
+
+    traverse('AA', 1, 0, 0);
+
+    let result = 0;
+    const entries = Array.from(maxResultCache.entries());
+    for (const [mask1, value1] of entries) {
+      for (const [mask2, value2] of entries) {
+        if ((mask1 & mask2) !== 0) continue;
+
+        const total = value1 + value2;
+        if (total > result) result = total;
+      }
     }
 
     return result;
-  },
-  easy: (valves) => {
-    console.log(valves);
-
-    return 0;
   },
 });
