@@ -1,10 +1,10 @@
-import { Neighbours } from '../../types/grids/grids.ts';
+import { Neighbours2 } from '../../types/grids/grids.ts';
 import { Puzzle } from '../../types/puzzle.ts';
 import { TileMap } from '../../utils/datatypes/tilemap.ts';
 import { sum } from '../../utils/maths.ts';
 import { Str } from '../../utils/strs.ts';
 
-const neighbours = Neighbours.all;
+const neighbours = Neighbours2.all;
 
 const isDigitChar = (char: string | undefined): char is string => char !== undefined && char >= '0' && '9' >= char;
 

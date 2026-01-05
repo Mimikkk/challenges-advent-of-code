@@ -1,4 +1,4 @@
-import { Neighbours } from '../../types/grids/grids.ts';
+import { Neighbours2 } from '../../types/grids/grids.ts';
 import { Ids } from '../../types/math/Ids.ts';
 import type { Vec2 } from '../../types/math/Vec2.ts';
 import { Puzzle } from '../../types/puzzle.ts';
@@ -23,7 +23,7 @@ const parseInput = (content: string): Input => {
   return { start, starts, destination, heights };
 };
 
-const neighbours = Neighbours.orthogonals;
+const neighbours = Neighbours2.orthogonals;
 const findShortestPathLength = ({ start, destination, heights }: Input): number => {
   const stack: [x: number, y: number, length: number][] = [[start.x, start.y, 0]];
 

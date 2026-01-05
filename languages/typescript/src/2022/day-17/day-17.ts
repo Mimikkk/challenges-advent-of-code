@@ -1,4 +1,4 @@
-import { Neighbours } from '../../types/grids/grids.ts';
+import { Neighbours2 } from '../../types/grids/grids.ts';
 import { Ids } from '../../types/math/Ids.ts';
 import { Vec2 } from '../../types/math/Vec2.ts';
 import { Puzzle } from '../../types/puzzle.ts';
@@ -53,7 +53,7 @@ function calcHash(chamber: Set<number>, top: number): number {
 
 export default Puzzle.new({
   prepare: (content) =>
-    content.trim().split('').map((char) => (char === '<' ? Neighbours.directions.left : Neighbours.directions.right)),
+    content.trim().split('').map((char) => (char === '<' ? Neighbours2.directions.left : Neighbours2.directions.right)),
   easy(orderedJets) {
     const chamber = new Set<number>();
     let top = 0;
@@ -70,8 +70,8 @@ export default Puzzle.new({
           activeRockOffset.add(jet);
         }
 
-        if (canMoveRock(chamber, activeRockPositions, activeRockOffset, Neighbours.directions.down)) {
-          activeRockOffset.add(Neighbours.directions.down);
+        if (canMoveRock(chamber, activeRockPositions, activeRockOffset, Neighbours2.directions.down)) {
+          activeRockOffset.add(Neighbours2.directions.down);
           continue;
         }
 
@@ -106,8 +106,8 @@ export default Puzzle.new({
           activeRockOffset.add(jet);
         }
 
-        if (canMoveRock(chamber, activeRockPositions, activeRockOffset, Neighbours.directions.down)) {
-          activeRockOffset.add(Neighbours.directions.down);
+        if (canMoveRock(chamber, activeRockPositions, activeRockOffset, Neighbours2.directions.down)) {
+          activeRockOffset.add(Neighbours2.directions.down);
           continue;
         }
         settleRock(chamber, activeRockPositions, activeRockOffset);

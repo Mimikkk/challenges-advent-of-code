@@ -1,4 +1,4 @@
-import { Neighbours } from '../../types/grids/grids.ts';
+import { Neighbours2 } from '../../types/grids/grids.ts';
 import { Puzzle } from '../../types/puzzle.ts';
 import { TileMap } from '../../utils/datatypes/tilemap.ts';
 import { Str } from '../../utils/strs.ts';
@@ -11,7 +11,7 @@ enum Tile {
 const isAccessible = (map: TileMap<Tile>, x: number, y: number): boolean => {
   let count = 0;
 
-  for (const neighbour of Neighbours.all) {
+  for (const neighbour of Neighbours2.all) {
     const xdx = x + neighbour.x;
     const ydy = y + neighbour.y;
     if (!map.is(xdx, ydy, Tile.Paper)) continue;

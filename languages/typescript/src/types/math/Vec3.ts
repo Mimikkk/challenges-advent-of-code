@@ -197,6 +197,14 @@ export class Vec3 {
     return Math.abs(this.x - x) + Math.abs(this.y - y) + Math.abs(this.z - z);
   }
 
+  static inBounds(position: Const<self>, min: Const<self>, max: Const<self>): boolean {
+    return position.inBounds(min, max);
+  }
+
+  inBounds({ x: minX, y: minY, z: minZ }: Const<self>, { x: maxX, y: maxY, z: maxZ }: Const<self>): boolean {
+    return this.x >= minX && this.x <= maxX && this.y >= minY && this.y <= maxY && this.z >= minZ && this.z <= maxZ;
+  }
+
   static equals(first: Const<self>, second: Const<self>): boolean {
     return first.equals(second);
   }
