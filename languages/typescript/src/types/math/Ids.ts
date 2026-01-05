@@ -3,6 +3,7 @@ import { Vec2 } from './Vec2.ts';
 import { Vec3 } from './Vec3.ts';
 
 export namespace Ids {
+  // 32-bit utils
   export const ni8 = (x: number, offset: number): number => (x & 0xFF) << offset;
   export const ni16 = (x: number, offset: number): number => (x & 0xFFFF) << offset;
 
